@@ -327,9 +327,7 @@ if report_type == "Match Report":
         st.subheader("Cross Map")
 
         # Filter for crosses with coordinates
-        df_cross = df_events[
-            (df_events["Category"].str.lower() == "cross") & df_events["XY"].notna()
-        ].copy()
+        df_cross = df_events[(df_events["Category"].str.lower() == "cross") & df_events["XY"].notna()].copy()
 
         if not df_cross.empty:
             df_cross[["X", "Y"]] = df_cross["XY"].str.split(";", expand=True).astype(int)
