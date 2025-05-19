@@ -244,8 +244,7 @@ if report_type == "Match Report":
 
         # --- Match selection ---
         event_files = {
-            "5.17 vs Birmingham Legion": "SSA USL2 v BHM Legion2 05.17.25.xlsx",
-            "5.20 vs Atlanta United": "match_atlanta_520.xlsx",
+            "5.17 vs Birmingham Legion": "SSA USL2 v BHM Legion2 05.17.25.xlsx"
             # Add more matches and their corresponding file names here
         }
 
@@ -256,6 +255,9 @@ if report_type == "Match Report":
         selected_match = st.selectbox("Select a Match", list(event_files.keys()))
         xls_path = event_files[selected_match]
 
+        event_xls = pd.ExcelFile(xls_path)
+        df_events = event_xls.parse("Nacsport")
+           
         try:
             # Load the event data from the selected file
             event_xls = pd.ExcelFile(xls_path)
