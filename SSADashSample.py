@@ -267,7 +267,7 @@ if report_type == "Match Report":
             st.subheader("Event Table")
             image_path = event_images[selected_match]
             event_image = Image.open(image_path)
-            st.image(event_image, caption=f"Event Table for {selected_match}", use_column_width=True)
+            st.image(event_image, caption=f"Event Table for {selected_match}", use_container_width=True)
 
             # --- Event Table Display ---
             core_cols = ["Category", "Start", "End"]
