@@ -253,7 +253,8 @@ if report_type == "Match Report":
         }
 
         event_images = {
-        "5.17 vs Birmingham Legion": "SSAvBHM2 Event Image.png"
+        "5.17 vs Birmingham Legion": "SSAvBHM2 Event Image.png",
+        "5.21 vs Tennessee SC": "Match Event Image SSAvTSC.png",
         }
 
         selected_match = st.selectbox("Select a Match", list(event_files.keys()))
