@@ -248,7 +248,8 @@ if report_type == "Match Report":
 
         # --- Match selection ---
         event_files = {
-            "5.17 vs Birmingham Legion": "SSA USL2 v BHM Legion2 05.17.25.xlsx"
+            "5.17 vs Birmingham Legion": "SSA USL2 v BHM Legion2 05.17.25.xlsx",
+            "5.21 vs Tennessee SC": "SSA USL2 v TSC 05.21.25.xlsx",
             # Add more matches and their corresponding file names here
         }
 
