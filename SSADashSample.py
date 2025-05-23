@@ -45,7 +45,9 @@ training_files = {
     "5.12 Training": "SSA Swarm USL 2 Mens Statsports Traning Report  - 5.12 Training.csv",
     "5.13 Training": "SSA Swarm USL 2 Mens Statsports Traning Report  - 5.13 Training .csv",
     "5.15 Training": "SSA Swarm USL 2 Mens Statsports Traning Report  - 5.15 Training.csv",
-    "5.16 Training": "SSA Swarm USL 2 Mens Statsports Traning Report  - 5.16 Training.csv"
+    "5.16 Training": "SSA Swarm USL 2 Mens Statsports Traning Report  - 5.16 Training.csv",
+    "5.19 Training": "SSA Swarm USL 2 Mens Statsports Traning Report  - 5.19 Training.csv",
+    "5.20 Training": "SSA Swarm USL 2 Mens Statsports Traning Report  - 5.20 Training.csv",
 }
 
 # Load data
