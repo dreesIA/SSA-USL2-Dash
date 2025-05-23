@@ -38,7 +38,7 @@ st.markdown(
 # File paths
 match_files = {
     "5.17 vs Birmingham Legion 2": "SSA Swarm USL Mens 2 Games Statsports Reports - 5.17 SSA Swarm USL 2 vs Birmingham.csv",
-    "5.21 vs Tennessee SC": "SSA Swarm USL Mens 2 Games Statsports Reports - 5.21 SSA Swarm USL 2 vs TN SC",
+    "5.21 vs Tennessee SC": "SSA Swarm USL Mens 2 Games Statsports Reports - 5.21 SSA Swarm USL 2 Vs TN SC",
     
 }
 
