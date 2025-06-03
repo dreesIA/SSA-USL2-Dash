@@ -160,7 +160,7 @@ if report_type == "Match Report":
     col4.metric("Avg High Speed Running (m)", round(match_df["High Speed Running"].mean(), 2))
 
     st.subheader("Performance Charts")
-    tab4, tab1, tab2, tab3 = st.tabs(["Event Data", "Bar Chart", "Fluctuation", "Radar Chart"])
+    tab1, tab2, tab3, tab4 = st.tabs(["Event Data", "Bar Chart", "Fluctuation", "Radar Chart"])
 
     with tab1:
          # Player performance metrics
