@@ -187,7 +187,7 @@ if report_type == "Match Report":
         if selected_match == "All Matches (Average)":
             combined_event_df = []
             for match, path in event_files.items():
-                if path:  # skip None
+                if path:  # skip placeholder None
                     try:
                         xls = pd.ExcelFile(path)
                         df_temp = xls.parse("Nacsport")
@@ -201,8 +201,8 @@ if report_type == "Match Report":
             df_events = pd.concat(combined_event_df, ignore_index=True)
             selected_image_path = None
         else:
-            xls_path = event_files[selected_match]
             try:
+                xls_path = event_files[selected_match]
                 xls = pd.ExcelFile(xls_path)
                 df_events = xls.parse("Nacsport")
                 selected_image_path = event_images.get(selected_match)
@@ -210,6 +210,10 @@ if report_type == "Match Report":
                 st.error(f"Failed to load data for {selected_match}: {e}")
                 st.stop()
 
+        if selected_image_path:
+            st.subheader("Event Table")
+            event_image = Image.open(selected_image_path)
+            st.image(event_image, caption=f"Event Table for {selected_match}", use_container_width=True)
 
 
         event_xls = pd.ExcelFile(xls_path)
