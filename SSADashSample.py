@@ -216,8 +216,6 @@ if report_type == "Match Report":
             st.image(event_image, caption=f"Event Table for {selected_match}", use_container_width=True)
 
 
-        event_xls = pd.ExcelFile(xls_path)
-        df_events = event_xls.parse("Nacsport")
            
         try:
             # Load the event data from the selected file
