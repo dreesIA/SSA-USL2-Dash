@@ -163,88 +163,6 @@ if report_type == "Match Report":
     tab1, tab2, tab3, tab4 = st.tabs(["Event Data", "Bar Chart", "Fluctuation", "Radar Chart"])
 
     with tab1:
-         # Player performance metrics
-        for metric in metrics:
-            chart_data = match_df.groupby("Player Name")[metric].mean().reset_index()
-            st.write(f"### {metric}")
-            st.altair_chart(
-                alt.Chart(chart_data).mark_bar().encode(
-                    x=alt.X("Player Name", sort="-y"),
-                    y=metric,
-                    tooltip=["Player Name", metric]
-                ).properties(height=300),
-                use_container_width=True
-                )
-
-
-
-    with tab2:  # Fluctuation tab
-        if selected_match == "All Matches (Average)":
-            st.markdown("### Team Metric Fluctuations Over Matches")
-
-            # Load and prepare all match data
-            df_all_matches = []
-            for label, path in match_files.items():
-                temp_df = load_data(path)
-                temp_df["Match"] = label
-                df_all_matches.append(temp_df)
-            full_df = pd.concat(df_all_matches, ignore_index=True)
-
-            # Clean numeric columns
-            for col in metrics:
-                full_df[col] = pd.to_numeric(full_df[col], errors='coerce')
-
-            # Team Average Over Matches
-            for metric in metrics:
-                st.write(f"#### {metric} (Team Avg)")
-                avg_data = full_df.groupby("Match")[metric].mean().reset_index()
-                chart = alt.Chart(avg_data).mark_line(point=True).encode(
-                    x=alt.X("Match:N", sort=list(match_files.keys())),
-                    y=alt.Y(f"{metric}:Q"),
-                    tooltip=["Match", metric]
-                ).properties(height=300)
-                st.altair_chart(chart, use_container_width=True)
-
-            # Player-Specific Trends
-            st.markdown("### Player Trends")
-            selected_players = st.multiselect(
-                "Select Players to Plot", sorted(full_df["Player Name"].unique()),
-                default=sorted(full_df["Player Name"].unique())[:3],
-                key="fluctuation_players"
-            )
-            if selected_players:
-                for metric in metrics:
-                    st.write(f"#### {metric} (By Player)")
-                    player_data = full_df[full_df["Player Name"].isin(selected_players)]
-                    player_avg = player_data.groupby(["Match", "Player Name"])[metric].mean().reset_index()
-
-                    chart = alt.Chart(player_avg).mark_line(point=True).encode(
-                        x=alt.X("Match:N", sort=list(match_files.keys())),
-                        y=alt.Y(f"{metric}:Q"),
-                        color="Player Name:N",
-                        tooltip=["Match", "Player Name", metric]
-                    ).properties(height=350)
-                    st.altair_chart(chart, use_container_width=True)
-            else:
-                st.info("Select one or more players to show player-specific trends.")
-        else:
-            st.info("Fluctuation charts are only available for 'All Matches (Average)'.")
-
-
-    with tab3:
-        if selected_player == "All":
-            st.info("Select a player to view radar chart.")
-        else:
-            full_team = df[df["Session Type"] == half_option] if half_option != "Total" else df
-            full_team.columns = full_team.columns.str.strip()
-            radar_df = full_team.groupby("Player Name")[metrics].mean()
-            fig = multi_player_percentile_radar(
-                radar_df.loc[[selected_player]], radar_df, metrics, f"{selected_player} Percentile Radar"
-            )
-            st.pyplot(fig)
-            
-    with tab4:
-       with tab4:
         st.header("Match Events and Shot Map")
 
         # --- Match selection ---
@@ -498,6 +416,91 @@ if report_type == "Match Report":
 
         else:
             st.info("No regains with coordinates found in this match.")
+
+    
+
+    with tab2:
+         # Player performance metrics
+        for metric in metrics:
+            chart_data = match_df.groupby("Player Name")[metric].mean().reset_index()
+            st.write(f"### {metric}")
+            st.altair_chart(
+                alt.Chart(chart_data).mark_bar().encode(
+                    x=alt.X("Player Name", sort="-y"),
+                    y=metric,
+                    tooltip=["Player Name", metric]
+                ).properties(height=300),
+                use_container_width=True
+                )
+
+
+
+    with tab3:  # Fluctuation tab
+        if selected_match == "All Matches (Average)":
+            st.markdown("### Team Metric Fluctuations Over Matches")
+
+            # Load and prepare all match data
+            df_all_matches = []
+            for label, path in match_files.items():
+                temp_df = load_data(path)
+                temp_df["Match"] = label
+                df_all_matches.append(temp_df)
+            full_df = pd.concat(df_all_matches, ignore_index=True)
+
+            # Clean numeric columns
+            for col in metrics:
+                full_df[col] = pd.to_numeric(full_df[col], errors='coerce')
+
+            # Team Average Over Matches
+            for metric in metrics:
+                st.write(f"#### {metric} (Team Avg)")
+                avg_data = full_df.groupby("Match")[metric].mean().reset_index()
+                chart = alt.Chart(avg_data).mark_line(point=True).encode(
+                    x=alt.X("Match:N", sort=list(match_files.keys())),
+                    y=alt.Y(f"{metric}:Q"),
+                    tooltip=["Match", metric]
+                ).properties(height=300)
+                st.altair_chart(chart, use_container_width=True)
+
+            # Player-Specific Trends
+            st.markdown("### Player Trends")
+            selected_players = st.multiselect(
+                "Select Players to Plot", sorted(full_df["Player Name"].unique()),
+                default=sorted(full_df["Player Name"].unique())[:3],
+                key="fluctuation_players"
+            )
+            if selected_players:
+                for metric in metrics:
+                    st.write(f"#### {metric} (By Player)")
+                    player_data = full_df[full_df["Player Name"].isin(selected_players)]
+                    player_avg = player_data.groupby(["Match", "Player Name"])[metric].mean().reset_index()
+
+                    chart = alt.Chart(player_avg).mark_line(point=True).encode(
+                        x=alt.X("Match:N", sort=list(match_files.keys())),
+                        y=alt.Y(f"{metric}:Q"),
+                        color="Player Name:N",
+                        tooltip=["Match", "Player Name", metric]
+                    ).properties(height=350)
+                    st.altair_chart(chart, use_container_width=True)
+            else:
+                st.info("Select one or more players to show player-specific trends.")
+        else:
+            st.info("Fluctuation charts are only available for 'All Matches (Average)'.")
+
+
+    with tab4:
+        if selected_player == "All":
+            st.info("Select a player to view radar chart.")
+        else:
+            full_team = df[df["Session Type"] == half_option] if half_option != "Total" else df
+            full_team.columns = full_team.columns.str.strip()
+            radar_df = full_team.groupby("Player Name")[metrics].mean()
+            fig = multi_player_percentile_radar(
+                radar_df.loc[[selected_player]], radar_df, metrics, f"{selected_player} Percentile Radar"
+            )
+            st.pyplot(fig)
+            
+    
 
 
 # Weekly Training Report
