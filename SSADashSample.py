@@ -210,11 +210,6 @@ if report_type == "Match Report":
                 st.error(f"Failed to load data for {selected_match}: {e}")
                 st.stop()
 
-        if selected_image_path:
-            st.subheader("Event Table")
-            event_image = Image.open(selected_image_path)
-            st.image(event_image, caption=f"Event Table for {selected_match}", use_container_width=True)
-
 
            
         try:
