@@ -213,8 +213,6 @@ if report_type == "Match Report":
 
            
         try:
-            # Load the event data from the selected file
-            df_events = event_xls.parse("Nacsport")
 
             # Display event image
             st.subheader("Event Table")
