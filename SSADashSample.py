@@ -167,6 +167,7 @@ if report_type == "Match Report":
 
         # --- Match selection ---
         event_files = {
+            "All Matches (Average)": None,  # placeholder to trigger multi-match behavior
             "5.17 vs Birmingham Legion": "SSA USL2 v BHM Legion2 05.17.25.xlsx",
             "5.21 vs Tennessee SC": "SSA USL2 v TSC 05.21.25.xlsx",
             "5.25 vs East Atlanta FC": "SSA USL2 v EAFC 05.25.25.xlsx",
@@ -182,7 +183,28 @@ if report_type == "Match Report":
         }
 
         selected_match = st.selectbox("Select a Match", list(event_files.keys()))
-        xls_path = event_files[selected_match]
+        if selected_match == "All Matches (Average)":
+            combined_event_df = []
+            for match, path in event_files.items():
+                if path:  # skip placeholder None
+                    try:
+                        xls = pd.ExcelFile(path)
+                        df_temp = xls.parse("Nacsport")
+                        df_temp["Match"] = match
+                        combined_event_df.append(df_temp)
+                    except Exception as e:
+                        st.warning(f"Could not load event data for {match}: {e}")
+            if not combined_event_df:
+                st.error("No event data available across matches.")
+                st.stop()
+            df_events = pd.concat(combined_event_df, ignore_index=True)
+            selected_image_path = None
+        else:
+            xls_path = event_files[selected_match]
+            xls = pd.ExcelFile(xls_path)
+            df_events = xls.parse("Nacsport")
+            selected_image_path = event_images.get(selected_match)
+
 
         event_xls = pd.ExcelFile(xls_path)
         df_events = event_xls.parse("Nacsport")
