@@ -164,25 +164,30 @@ if report_type == "Match Report":
 
     with tab1:
         st.header("Match Events and Shot Map")
-    
+
+        # --- Match selection ---
         event_files = {
-            "All Matches (Average)": None,
-            "5.17 vs Birmingham Legion 2": "SSA USL2 v BHM Legion2 05.17.25.xlsx",
+            "All Matches (Average)": None,  # placeholder to trigger multi-match behavior
+            "5.17 vs Birmingham Legion": "SSA USL2 v BHM Legion2 05.17.25.xlsx",
             "5.21 vs Tennessee SC": "SSA USL2 v TSC 05.21.25.xlsx",
             "5.25 vs East Atlanta FC": "SSA USL2 v EAFC 05.25.25.xlsx",
+
+            # Add more matches and their corresponding file names here
         }
-    
+
         event_images = {
-            "5.17 vs Birmingham Legion 2": "SSAvBHM2 Event Image.png",
-            "5.21 vs Tennessee SC": "Match Event Image SSAvTSC.png",
-            "5.25 vs East Atlanta FC": "East Atlanta Event Data Screenshot.png",
+        "5.17 vs Birmingham Legion": "SSAvBHM2 Event Image.png",
+        "5.21 vs Tennessee SC": "Match Event Image SSAvTSC.png",
+        "5.25 vs East Atlanta FC": "East Atlanta Event Data Screenshot.png",
+        
         }
-    
+
+        selected_match = st.selectbox("Select a Match", list(event_files.keys()))
         # Load the event data
         if selected_match == "All Matches (Average)":
             combined_event_df = []
             for match, path in event_files.items():
-                if path:
+                if path:  # skip placeholder None
                     try:
                         xls = pd.ExcelFile(path)
                         df_temp = xls.parse("Nacsport")
@@ -204,63 +209,101 @@ if report_type == "Match Report":
             except Exception as e:
                 st.error(f"Failed to load data for {selected_match}: {e}")
                 st.stop()
-    
-        # Display event image (if single match)
-        if selected_image_path:
+
+
+           
+        try:
+            # Load the event data from the selected file
+            df_events = event_xls.parse("Nacsport")
+
+            # Display event image
             st.subheader("Event Table")
-            event_image = Image.open(selected_image_path)
+            image_path = event_images[selected_match]
+            event_image = Image.open(image_path)
             st.image(event_image, caption=f"Event Table for {selected_match}", use_container_width=True)
-    
-        # Event Table
-        core_cols = ["Category", "Start", "End"]
-        descriptor_cols = [col for col in df_events.columns if "Des" in str(col)]
-        non_empty_des = [col for col in descriptor_cols if df_events[col].notna().sum() > 0][:4]
-        event_df = df_events[core_cols + non_empty_des].dropna(subset=["Category", "Start", "End"], how="all")
-    
-        # Shot Map
-        st.subheader("Shot Map")
-        field_image = Image.open("NS_camp_soccer_H.png")
-        field_width, field_height = field_image.size
-        midfield_x = field_width / 2
-    
-        df_xy = df_events.dropna(subset=["XY"]).copy()
-        df_xy[["X", "Y"]] = df_xy["XY"].str.split(";", expand=True).astype(int)
-    
-        descriptor_text = df_xy[descriptor_cols].astype(str).agg(" ".join, axis=1)
-        df_xy["is_goal"] = descriptor_text.str.contains("goal", case=False, na=False)
-        df_xy["color"] = df_xy["is_goal"].map({True: "lime", False: "red"})
-    
-        fig, ax = plt.subplots(figsize=(12, 7))
-        ax.imshow(field_image, extent=[0, field_width, 0, field_height])
-        ax.scatter(
-            df_xy["X"], field_height - df_xy["Y"],
-            c=df_xy["color"], edgecolors='white', s=60
-        )
-        ax.set_xlim(0, field_width)
-        ax.set_ylim(0, field_height)
-        ax.set_title(f"Shot Locations – {selected_match} (Swarm → Right)", color=primary_color)
-        ax.axis('off')
-        st.pyplot(fig)
-    
-        # Cross Map
+
+            # --- Event Table Display ---
+            core_cols = ["Category", "Start", "End"]
+            descriptor_cols = [col for col in df_events.columns if "Des" in str(col)]
+            non_empty_des = [col for col in descriptor_cols if df_events[col].notna().sum() > 0][:4]
+            event_df = df_events[core_cols + non_empty_des].dropna(subset=["Category", "Start", "End"], how="all")
+
+            # --- Shot Map Plotting ---
+            st.subheader("Shot Map")
+
+            import matplotlib.pyplot as plt
+            from PIL import Image
+
+            # Loading Field Images
+            field_image_path = "NS_camp_soccer_H.png"
+            field_image = Image.open(field_image_path)
+            field_width, field_height = field_image.size
+            midfield_x = field_width / 2
+
+            field_image_thirds = Image.open("NS_camp_soccer_V_T.png")
+            field_width_thirds, field_height_thirds = field_image_thirds.size
+
+            df_xy = df_events.dropna(subset=["XY"]).copy()
+            df_xy[["X", "Y"]] = df_xy["XY"].str.split(";", expand=True).astype(int)
+
+            # Tag shots as Goal vs Other
+            descriptor_text = df_xy[descriptor_cols].astype(str).agg(" ".join, axis=1)
+            df_xy["is_goal"] = descriptor_text.str.contains("goal", case=False, na=False)
+
+            # Colors: green for goals, red otherwise
+            df_xy["color"] = df_xy["is_goal"].map({True: "lime", False: "red"})
+
+            # Plot
+            fig, ax = plt.subplots(figsize=(12, 7))
+            ax.imshow(field_image, extent=[0, field_width, 0, field_height])
+
+            # Draw shots
+            ax.scatter(
+                df_xy["X"],
+                field_height - df_xy["Y"],
+                c=df_xy["color"],
+                edgecolors='white',
+                s=60
+            )
+
+            # Midfield Label
+            ax.set_xlim(0, field_width)
+            ax.set_ylim(0, field_height)
+            ax.set_title(f"Shot Locations – {selected_match} (Swarm → Right)", color=primary_color)
+            ax.axis('off')
+
+            st.pyplot(fig)
+
+
+        except Exception as e:
+            st.error(f"Failed to load data for {selected_match}: {e}")
+
+        # --- Cross Map ---
         st.subheader("Cross Map")
+
+        # Filter for crosses with coordinates
         df_cross = df_events[(df_events["Category"].str.lower() == "cross") & df_events["XY"].notna()].copy()
+
         if not df_cross.empty:
             df_cross[["X", "Y"]] = df_cross["XY"].str.split(";", expand=True).astype(int)
+
+            # Check descriptor text for outcomes
             cross_desc = df_cross[descriptor_cols].astype(str).agg(" ".join, axis=1).str.lower()
             df_cross["is_goal"] = cross_desc.str.contains("goal")
             df_cross["is_contact"] = cross_desc.str.contains("contact") & ~df_cross["is_goal"]
-    
+
+            # Assign color
             def classify_cross(row):
                 if row["is_goal"]:
-                    return "lime"
+                    return "lime"    # green
                 elif row["is_contact"]:
                     return "yellow"
                 else:
                     return "red"
-    
+
             df_cross["color"] = df_cross.apply(classify_cross, axis=1)
-    
+
+            # Plot crosses
             fig, ax = plt.subplots(figsize=(12, 7))
             ax.imshow(field_image, extent=[0, field_width, 0, field_height])
             ax.scatter(
@@ -270,6 +313,7 @@ if report_type == "Match Report":
             ax.axvline(midfield_x, color='white', linestyle='--', linewidth=1)
             ax.text(midfield_x - 150, field_height - 20, "OPP Attacking", color='lightgreen', fontsize=12)
             ax.text(midfield_x + 50, field_height - 20, "Swarm Attacking", color='lightblue', fontsize=12)
+
             ax.set_xlim(0, field_width)
             ax.set_ylim(0, field_height)
             ax.set_title(f"Cross Map – {selected_match} (Green = Goal, Yellow = Contact, Red = Unsuccessful)", color=primary_color)
@@ -277,6 +321,8 @@ if report_type == "Match Report":
             st.pyplot(fig)
         else:
             st.info("No cross events with coordinates found in this match.")
+
+
 
 
         #Attacking Third Entries
