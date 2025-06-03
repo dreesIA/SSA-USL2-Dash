@@ -251,12 +251,16 @@ if report_type == "Match Report":
         event_files = {
             "5.17 vs Birmingham Legion": "SSA USL2 v BHM Legion2 05.17.25.xlsx",
             "5.21 vs Tennessee SC": "SSA USL2 v TSC 05.21.25.xlsx",
+            "5.25 vs East Atlanta FC": "SSA USL2 v EAFC 05.25.25.xlsx",
+
             # Add more matches and their corresponding file names here
         }
 
         event_images = {
         "5.17 vs Birmingham Legion": "SSAvBHM2 Event Image.png",
         "5.21 vs Tennessee SC": "Match Event Image SSAvTSC.png",
+        "5.25 vs East Atlanta FC": "East Atlanta Event Data Screenshot.png",
+        
         }
 
         selected_match = st.selectbox("Select a Match", list(event_files.keys()))
