@@ -214,7 +214,6 @@ if report_type == "Match Report":
            
         try:
             # Load the event data from the selected file
-            event_xls = pd.ExcelFile(xls_path)
             df_events = event_xls.parse("Nacsport")
 
             # Display event image
