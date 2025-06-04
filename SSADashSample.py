@@ -40,7 +40,7 @@ match_files = {
     "5.17 vs Birmingham Legion 2": "SSA Swarm USL Mens 2 Games Statsports Reports - 5.17 SSA Swarm USL 2 vs Birmingham.csv",
     "5.21 vs Tennessee SC": "SSA Swarm USL Mens 2 Games Statsports Reports - 5.21 Swarm USL 2 Vs TN SC.csv",
     "5.25 vs East Atlanta FC": "SSA Swarm USL Mens 2 Games Statsports Reports - 5.25 SSA Swarm USL 2 vs East Atlanta.csv",
-    "5.31 vs Dothan United SC": "SSA Swarm USL Mens 2 Games Statsports Reports - 5.31 Swarm USL 2 vs Dothan",
+    "5.31 vs Dothan United SC": "SSA Swarm USL Mens 2 Games Statsports Reports - 5.31 Swarm USL 2 vs Dothan.csv",
     
 }
 
