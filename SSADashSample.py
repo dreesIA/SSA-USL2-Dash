@@ -181,7 +181,7 @@ if report_type == "Match Report":
 
         event_images = {
         "5.17 vs Birmingham Legion": "SSAvBHM2 Event Image.png",
-        "5.21 vs Tennessee SC": "Match Event Image SSAvTSC.png",
+        "5.21 vs Tennessee SC": "TSC New Event Image.png",
         "5.25 vs East Atlanta FC": "East Atlanta Event Data Screenshot.png",
         "5.31 vs Dothan United SC": "Dothan Event Image.png",
         
