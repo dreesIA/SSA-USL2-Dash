@@ -143,8 +143,6 @@ if report_type in ["Match Report", "Compare Players"]:
     for col in metrics:
         df[col] = pd.to_numeric(df[col], errors='coerce')
         
-def select_half():
-    return st.sidebar.selectbox("Select Half", ["Total", "First Half", "Second Half"])
 
 # Page title
 st.title(f"SSA Swarm USL2 Performance Center - {selected_match}")
