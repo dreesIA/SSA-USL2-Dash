@@ -173,7 +173,7 @@ if report_type == "Match Report":
         # --- Match selection ---
         event_files = {
             "All Matches (Average)": None,  # placeholder to trigger multi-match behavior
-            "5.17 vs Birmingham Legion": "SSA USL2 v BHM Legion2 05.17.25.xlsx",
+            "5.17 vs Birmingham Legion 2": "SSA USL2 v BHM Legion2 05.17.25.xlsx",
             "5.21 vs Tennessee SC": "SSA USL2 v TSC 05.21.25.xlsx",
             "5.25 vs East Atlanta FC": "SSA USL2 v EAFC 05.25.25.xlsx",
             "5.31 vs Dothan United SC": "SSA v Dothan USL2 05.31.25.xlsx",
@@ -184,7 +184,7 @@ if report_type == "Match Report":
         }
 
         event_images = {
-        "5.17 vs Birmingham Legion": "SSAvBHM2 Event Image.png",
+        "5.17 vs Birmingham Legion 2": "SSAvBHM2 Event Image.png",
         "5.21 vs Tennessee SC": "TSC New Event Image.png",
         "5.25 vs East Atlanta FC": "East Atlanta Event Data Screenshot.png",
         "5.31 vs Dothan United SC": "Dothan Event Image.png",
@@ -192,7 +192,7 @@ if report_type == "Match Report":
         
         }
 
-        selected_match = st.selectbox("Select a Match", list(event_files.keys()))
+        selected_match = st.sidebar.selectbox("Select Match", match_options)
         # Load the event data
         if selected_match == "All Matches (Average)":
             combined_event_df = []
