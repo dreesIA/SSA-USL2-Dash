@@ -168,7 +168,7 @@ if report_type == "Match Report":
     tab1, tab2, tab3, tab4 = st.tabs(["Event Data", "Bar Chart", "Fluctuation", "Radar Chart"])
 
     with tab1:
-        st.header("Match Events and Shot Map")
+        st.header("Match Event Table and Maps")
 
         # --- Match selection ---
         event_files = {
