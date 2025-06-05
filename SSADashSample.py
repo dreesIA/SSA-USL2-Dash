@@ -192,7 +192,7 @@ if report_type == "Match Report":
         
         }
 
-        selected_match = st.sidebar.selectbox("Select Match", match_options)
+
         # Load the event data
         if selected_match == "All Matches (Average)":
             combined_event_df = []
