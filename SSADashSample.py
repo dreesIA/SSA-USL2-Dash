@@ -172,35 +172,6 @@ if report_type == "Match Report":
 
         
 
-        st.subheader("Event Summary Table")
-        
-        def generate_event_summary(df_events, match_name):
-            # (function definition from above...)
-            ...
-        
-        # Call the summary table function
-        if selected_match != "All Matches (Average)":
-            generate_event_summary(df_events, selected_match)
-        else:
-            st.markdown("### All Matches Average Summary")
-            for match in event_files:
-                if event_files[match] is None:
-                    continue
-                try:
-                    xls = pd.ExcelFile(event_files[match])
-                    df_temp = xls.parse("Nacsport")
-                    descriptor_cols = [col for col in df_temp.columns if "Des" in str(col)]
-                    df_temp["desc_text"] = df_temp[descriptor_cols].astype(str).agg(" ".join, axis=1).str.lower()
-                    generate_event_summary(df_temp, match)
-                except Exception as e:
-                    st.warning(f"Could not load {match}: {e}")
-        
-        # Then continue with:
-        # Display event image
-        # st.subheader("Event Table")
-        # ...
-
-
         # --- Match selection ---
         event_files = {
             "All Matches (Average)": None,  # placeholder to trigger multi-match behavior
@@ -222,6 +193,7 @@ if report_type == "Match Report":
         
         
         }
+
 
 
         # Load the event data
@@ -266,6 +238,40 @@ if report_type == "Match Report":
             descriptor_cols = [col for col in df_events.columns if "Des" in str(col)]
             non_empty_des = [col for col in descriptor_cols if df_events[col].notna().sum() > 0][:4]
             event_df = df_events[core_cols + non_empty_des].dropna(subset=["Category", "Start", "End"], how="all")
+
+            # --- Data based Event Table ---
+
+            def generate_event_summary(df_events, match_name):
+                st.subheader(f"Event Summary – {match_name}")
+            
+                core_cols = ["Category", "Start", "End"]
+                descriptor_cols = [col for col in df_events.columns if "Des" in str(col)]
+                non_empty_des = [col for col in descriptor_cols if df_events[col].notna().sum() > 0][:4]
+            
+                summary_df = df_events[core_cols + non_empty_des].dropna(subset=["Category", "Start", "End"], how="all").copy()
+                summary_df["desc_text"] = summary_df[non_empty_des].astype(str).agg(" ".join, axis=1).str.lower()
+            
+                def classify_outcome(text):
+                    if "goal" in text:
+                        return "✅ Goal"
+                    elif "shot" in text or "contact" in text:
+                        return "🎯 Contact"
+                    else:
+                        return "❌ Other"
+            
+                summary_df["Outcome"] = summary_df["desc_text"].apply(classify_outcome)
+                summary_df = summary_df[["Category", "Start", "End", "Outcome"]].reset_index(drop=True)
+            
+                # Color formatting
+                styled = summary_df.style.applymap(
+                    lambda x: "color: green;" if "✅" in x else 
+                              "color: orange;" if "🎯" in x else 
+                              "color: red;" if "❌" in x else "",
+                    subset=["Outcome"]
+                ).set_properties(**{'text-align': 'center'}).hide(axis="index")
+            
+                st.dataframe(styled, use_container_width=True)
+
 
             # --- Shot Map Plotting ---
             st.subheader("Shot Map")
