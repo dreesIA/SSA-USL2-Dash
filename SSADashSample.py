@@ -766,7 +766,7 @@ elif report_type == "Daily Training Report":
 
 # Match Compare Players
 elif report_type == "Compare Players":
-    half_option = select_half()
+    half_option = st.sidebar.selectbox("Select Half", ["Total", "First Half", "Second Half"], key="half_compare")
     players = df["Player Name"].unique().tolist()
     selected = st.sidebar.multiselect("Select 2–3 Players", players, default=players[:2])
     if len(selected) not in [2, 3]:
