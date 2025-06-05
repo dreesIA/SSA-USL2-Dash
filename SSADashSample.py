@@ -119,23 +119,30 @@ def crop_circle(image_path):
 logo = crop_circle("SSALogoTransparent.jpeg")
 st.sidebar.image(logo, width=250)
 
-# Match selection
-match_options = ["All Matches (Average)"] + list(match_files.keys())
-selected_match = st.sidebar.selectbox("Select Match", match_options)
-
-if selected_match == "All Matches (Average)":
-    df = pd.concat([load_data(path) for path in match_files.values()], ignore_index=True)
-else:
-    df = load_data(match_files[selected_match])
-
-for col in metrics:
-    df[col] = pd.to_numeric(df[col], errors='coerce')
-
-# Sidebar report type
+# Sidebar report type (move this up)
 report_type = st.sidebar.selectbox("Select Report Type", [
     "Match Report", "Weekly Training Report", "Daily Training Report", "Compare Players"
 ])
 
+# Conditional match + half selectors
+selected_match = None
+half_option = None
+df = pd.DataFrame()
+
+if report_type in ["Match Report", "Compare Players"]:
+    match_options = ["All Matches (Average)"] + list(match_files.keys())
+    selected_match = st.sidebar.selectbox("Select Match", match_options)
+
+    half_option = st.sidebar.selectbox("Select Half", ["Total", "First Half", "Second Half"])
+
+    if selected_match == "All Matches (Average)":
+        df = pd.concat([load_data(path) for path in match_files.values()], ignore_index=True)
+    else:
+        df = load_data(match_files[selected_match])
+
+    for col in metrics:
+        df[col] = pd.to_numeric(df[col], errors='coerce')
+        
 def select_half():
     return st.sidebar.selectbox("Select Half", ["Total", "First Half", "Second Half"])
 
