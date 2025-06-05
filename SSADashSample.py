@@ -170,6 +170,37 @@ if report_type == "Match Report":
     with tab1:
         st.header("Match Event Table and Maps")
 
+        
+
+        st.subheader("Event Summary Table")
+        
+        def generate_event_summary(df_events, match_name):
+            # (function definition from above...)
+            ...
+        
+        # Call the summary table function
+        if selected_match != "All Matches (Average)":
+            generate_event_summary(df_events, selected_match)
+        else:
+            st.markdown("### All Matches Average Summary")
+            for match in event_files:
+                if event_files[match] is None:
+                    continue
+                try:
+                    xls = pd.ExcelFile(event_files[match])
+                    df_temp = xls.parse("Nacsport")
+                    descriptor_cols = [col for col in df_temp.columns if "Des" in str(col)]
+                    df_temp["desc_text"] = df_temp[descriptor_cols].astype(str).agg(" ".join, axis=1).str.lower()
+                    generate_event_summary(df_temp, match)
+                except Exception as e:
+                    st.warning(f"Could not load {match}: {e}")
+        
+        # Then continue with:
+        # Display event image
+        # st.subheader("Event Table")
+        # ...
+
+
         # --- Match selection ---
         event_files = {
             "All Matches (Average)": None,  # placeholder to trigger multi-match behavior
