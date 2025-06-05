@@ -149,7 +149,7 @@ st.title(f"SSA Swarm USL2 Performance Center - {selected_match}")
 
 # Match Report
 if report_type == "Match Report":
-    half_option = st.sidebar.selectbox("Select Half", ["Total", "First Half", "Second Half"])
+    half_option = st.sidebar.selectbox("Select Half", ["Total", "First Half", "Second Half"], key="half_selectbox")
     players = df["Player Name"].unique().tolist()
     selected_player = st.sidebar.selectbox("Select a Player", ["All"] + players)
 
