@@ -133,8 +133,6 @@ if report_type in ["Match Report", "Compare Players"]:
     match_options = ["All Matches (Average)"] + list(match_files.keys())
     selected_match = st.sidebar.selectbox("Select Match", match_options)
 
-    half_option = st.sidebar.selectbox("Select Half", ["Total", "First Half", "Second Half"])
-
     if selected_match == "All Matches (Average)":
         df = pd.concat([load_data(path) for path in match_files.values()], ignore_index=True)
     else:
