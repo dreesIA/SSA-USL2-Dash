@@ -278,6 +278,9 @@ if report_type == "Match Report":
             event_image = Image.open(image_path)
             st.image(event_image, caption=f"Event Table for {selected_match}", use_container_width=True)
 
+        except Exception as e:
+            st.error(f"Error displaying event table: {e}")
+
            
         # --- Sub-Category Tables ---
         def show_event_subtable(df_events, category_keywords, title):
