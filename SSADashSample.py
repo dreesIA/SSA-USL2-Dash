@@ -257,7 +257,7 @@ if report_type == "Match Report":
             return summary
         
         # --- Show Dynamic Summary Table ---
-        st.markdown("### 📊 Match Summary – Central Stats")
+        st.markdown("### Match Summary")
         summary_stats = generate_match_summary(df_events)
         
         for stat, (swarm, opp) in summary_stats.items():
@@ -310,7 +310,7 @@ if report_type == "Match Report":
                     st.info(f"No {title.lower()} found.")
         
         # --- Call for each sub-table ---
-        st.markdown("### 🧩 Event Sub-Tables")
+        st.markdown("### Event Sub-Tables")
         show_event_subtable(df_events, ["cross"], "Crosses")
         show_event_subtable(df_events, ["free kick"], "Free Kicks")
         show_event_subtable(df_events, ["corner"], "Corner Kicks")
