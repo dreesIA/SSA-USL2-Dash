@@ -239,20 +239,20 @@ if report_type == "Match Report":
                     mask &= ~desc_text.str.contains("opp") & ~df["Category"].str.lower().str.contains("opp")
                 return mask.sum()
         
-            summary = {
-                "Shots On Target": [count_events("Shot") + count_events("Goal"), count_events("Shot", True) + count_events("Goal", True)],
-                "Shots": [count_events("Shot"), count_events("Shot", True)],
-                "Blocked Shots": [count_events("Blocked"), count_events("Blocked", True)],
-                "PAZ Entries": [count_events("PAZ"), count_events("PAZ", True)],
-                "Crosses": [count_events("Cross"), count_events("Cross", True)],
-                "Zone 3 Entries": [count_events("A3E"), count_events("OPP A3E")],
-                "Regains": [count_events("Regain"), count_events("Regain", True)],
-                "Fouls Won": [count_events("Foul Won"), count_events("OPP Foul Won")],
-                "Corner Kicks": [count_events("Corner"), count_events("Corner", True)],
-                "Free Kicks": [count_events("Free Kick"), count_events("Free Kick", True)],
-                "Goal Kicks": [count_events("Goal Kick"), count_events("Goal Kick", True)],
-            }
-            return summary
+                summary = {
+                    "Shots On Target": [count_events("Shot") + count_events("Goal"), count_events("Shot", True) + count_events("Goal", True)],
+                    "Shots": [count_events("Shot"), count_events("Shot", True)],
+                    "Blocked Shots": [count_events("Blocked"), count_events("Blocked", True)],
+                    "PAZ Entries": [count_events("PAZ"), count_events("PAZ", True)],
+                    "Crosses": [count_events("Cross"), count_events("Cross", True)],
+                    "Zone 3 Entries": [count_events("A3E"), count_events("OPP A3E")],
+                    "Regains": [count_events("Regain"), count_events("Regain", True)],
+                    "Fouls Won": [count_events("Foul Won"), count_events("OPP Foul Won")],
+                    "Corner Kicks": [count_events("Corner"), count_events("Corner", True)],
+                    "Free Kicks": [count_events("Free Kick"), count_events("Free Kick", True)],
+                    "Goal Kicks": [count_events("Goal Kick"), count_events("Goal Kick", True)],
+                    }
+                    return summary
         
         # --- Show Dynamic Summary Table ---
         st.markdown("### 📊 Match Summary – Central Stats")
