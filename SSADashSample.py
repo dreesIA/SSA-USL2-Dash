@@ -201,7 +201,7 @@ if report_type == "Match Report":
         
                 st.dataframe(styled, use_container_width=True)
 
-    generate_event_summary(df_events, selected_match)
+        generate_event_summary(df_events, selected_match)
 
 
 
