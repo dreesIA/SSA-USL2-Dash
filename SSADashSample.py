@@ -141,36 +141,8 @@ if report_type in ["Match Report", "Compare Players"]:
     for col in metrics:
         df[col] = pd.to_numeric(df[col], errors='coerce')
         
-
-# Page title
-st.title(f"SSA Swarm USL2 Performance Center - {selected_match}")
-
-# Match Report
-if report_type == "Match Report":
-    half_option = st.sidebar.selectbox("Select Half", ["Total", "First Half", "Second Half"], key="half_selectbox")
-    players = df["Player Name"].unique().tolist()
-    selected_player = st.sidebar.selectbox("Select a Player", ["All"] + players)
-
-    match_df = df.copy()
-    if selected_player != "All":
-        match_df = match_df[match_df["Player Name"] == selected_player]
-    if half_option != "Total":
-        match_df = match_df[match_df["Session Type"] == half_option]
-
-    st.subheader("Key Metrics")
-    col1, col2, col3, col4 = st.columns(4)
-    col1.metric("Avg Distance (km)", round(match_df["Total Distance"].mean(), 2))
-    col2.metric("Avg Max Speed (km/h)", round(match_df["Max Speed"].mean(), 2))
-    col3.metric("Avg Sprints", round(match_df["No of Sprints"].mean(), 2))
-    col4.metric("Avg High Speed Running (m)", round(match_df["High Speed Running"].mean(), 2))
-
-    st.subheader("Performance Charts")
-    tab1, tab2, tab3, tab4 = st.tabs(["Event Data", "Bar Chart", "Fluctuation", "Radar Chart"])
-
-    with tab1:
-        st.header("Match Event Table and Maps")
-
-        def generate_event_summary(df_events, match_name):
+#Event Data Table
+def generate_event_summary(df_events, match_name):
                 st.subheader(f"Event Summary – {match_name}")
         
                 core_cols = ["Category", "Start", "End"]
@@ -200,6 +172,35 @@ if report_type == "Match Report":
                 ).set_properties(**{'text-align': 'center'}).hide(axis="index")
         
                 st.dataframe(styled, use_container_width=True)
+
+
+# Page title
+st.title(f"SSA Swarm USL2 Performance Center - {selected_match}")
+
+# Match Report
+if report_type == "Match Report":
+    half_option = st.sidebar.selectbox("Select Half", ["Total", "First Half", "Second Half"], key="half_selectbox")
+    players = df["Player Name"].unique().tolist()
+    selected_player = st.sidebar.selectbox("Select a Player", ["All"] + players)
+
+    match_df = df.copy()
+    if selected_player != "All":
+        match_df = match_df[match_df["Player Name"] == selected_player]
+    if half_option != "Total":
+        match_df = match_df[match_df["Session Type"] == half_option]
+
+    st.subheader("Key Metrics")
+    col1, col2, col3, col4 = st.columns(4)
+    col1.metric("Avg Distance (km)", round(match_df["Total Distance"].mean(), 2))
+    col2.metric("Avg Max Speed (km/h)", round(match_df["Max Speed"].mean(), 2))
+    col3.metric("Avg Sprints", round(match_df["No of Sprints"].mean(), 2))
+    col4.metric("Avg High Speed Running (m)", round(match_df["High Speed Running"].mean(), 2))
+
+    st.subheader("Performance Charts")
+    tab1, tab2, tab3, tab4 = st.tabs(["Event Data", "Bar Chart", "Fluctuation", "Radar Chart"])
+
+    with tab1:
+        st.header("Match Event Table and Maps")
 
         generate_event_summary(df_events, selected_match)
 
