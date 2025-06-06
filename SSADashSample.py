@@ -218,6 +218,7 @@ if report_type == "Match Report":
                 xls_path = event_files[selected_match]
                 xls = pd.ExcelFile(xls_path)
                 df_events = xls.parse("Nacsport")
+                descriptor_cols = [col for col in df_events.columns if col.startswith("Des")]
                 selected_image_path = event_images.get(selected_match)
             except Exception as e:
                 st.error(f"Failed to load data for {selected_match}: {e}")
