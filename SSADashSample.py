@@ -141,37 +141,6 @@ if report_type in ["Match Report", "Compare Players"]:
     for col in metrics:
         df[col] = pd.to_numeric(df[col], errors='coerce')
         
-#Event Data Table
-def generate_event_summary(df_events, match_name):
-                st.subheader(f"Event Summary – {match_name}")
-        
-                core_cols = ["Category", "Start", "End"]
-                descriptor_cols = [col for col in df_events.columns if "Des" in str(col)]
-                non_empty_des = [col for col in descriptor_cols if df_events[col].notna().sum() > 0][:4]
-        
-                summary_df = df_events[core_cols + non_empty_des].dropna(subset=["Category", "Start", "End"], how="all").copy()
-                summary_df["desc_text"] = summary_df[non_empty_des].astype(str).agg(" ".join, axis=1).str.lower()
-        
-                def classify_outcome(text):
-                    if "goal" in text:
-                        return "✅ Goal"
-                    elif "shot" in text or "contact" in text:
-                        return "🎯 Contact"
-                    else:
-                        return "❌ Other"
-        
-                summary_df["Outcome"] = summary_df["desc_text"].apply(classify_outcome)
-                summary_df = summary_df[["Category", "Start", "End", "Outcome"]].reset_index(drop=True)
-        
-                # Color formatting
-                styled = summary_df.style.applymap(
-                    lambda x: "color: green;" if "✅" in x else 
-                              "color: orange;" if "🎯" in x else 
-                              "color: red;" if "❌" in x else "",
-                    subset=["Outcome"]
-                ).set_properties(**{'text-align': 'center'}).hide(axis="index")
-        
-                st.dataframe(styled, use_container_width=True)
 
 
 # Page title
@@ -254,7 +223,52 @@ if report_type == "Match Report":
                 st.error(f"Failed to load data for {selected_match}: {e}")
                 st.stop()
 
-        generate_event_summary(df_events, selected_match)
+        # --- Dynamic Match Summary Generator ---
+        def generate_match_summary(df_events):
+            df = df_events.copy()
+            df.columns = df.columns.str.strip()
+            df["Category"] = df["Category"].astype(str).str.strip()
+            descriptor_cols = [col for col in df.columns if col.startswith("Des")]
+            desc_text = df[descriptor_cols].astype(str).agg(" ".join, axis=1).str.lower()
+        
+            def count_events(keyword, is_opp=False):
+                mask = df["Category"].str.lower().str.contains(keyword.lower())
+                if is_opp:
+                    mask &= desc_text.str.contains("opp") | df["Category"].str.lower().str.contains("opp")
+                else:
+                    mask &= ~desc_text.str.contains("opp") & ~df["Category"].str.lower().str.contains("opp")
+                return mask.sum()
+        
+            summary = {
+                "Shots On Target": [count_events("Shot") + count_events("Goal"), count_events("Shot", True) + count_events("Goal", True)],
+                "Shots": [count_events("Shot"), count_events("Shot", True)],
+                "Blocked Shots": [count_events("Blocked"), count_events("Blocked", True)],
+                "PAZ Entries": [count_events("PAZ"), count_events("PAZ", True)],
+                "Crosses": [count_events("Cross"), count_events("Cross", True)],
+                "Zone 3 Entries": [count_events("A3E"), count_events("OPP A3E")],
+                "Regains": [count_events("Regain"), count_events("Regain", True)],
+                "Fouls Won": [count_events("Foul Won"), count_events("OPP Foul Won")],
+                "Corner Kicks": [count_events("Corner"), count_events("Corner", True)],
+                "Free Kicks": [count_events("Free Kick"), count_events("Free Kick", True)],
+                "Goal Kicks": [count_events("Goal Kick"), count_events("Goal Kick", True)],
+            }
+            return summary
+        
+        # --- Show Dynamic Summary Table ---
+        st.markdown("### 📊 Match Summary – Central Stats")
+        summary_stats = generate_match_summary(df_events)
+        
+        for stat, (swarm, opp) in summary_stats.items():
+            col1, col2, col3 = st.columns([1.5, 2, 1.5])
+            with col1:
+                color = "green" if swarm > opp else "red" if swarm < opp else "white"
+                st.markdown(f"<div style='text-align:center; color:{color}; font-size:20px;'>{swarm}</div>", unsafe_allow_html=True)
+            with col2:
+                st.markdown(f"<div style='text-align:center; font-weight:bold;'>{stat}</div>", unsafe_allow_html=True)
+            with col3:
+                color = "green" if opp > swarm else "red" if opp < swarm else "white"
+                st.markdown(f"<div style='text-align:center; color:{color}; font-size:20px;'>{opp}</div>", unsafe_allow_html=True)
+
            
         try:
 
