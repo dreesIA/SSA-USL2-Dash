@@ -327,46 +327,47 @@ if report_type == "Match Report":
 
         import matplotlib.pyplot as plt
         from PIL import Image
-
+        
+        try:
             # Loading Field Images
-        field_image_path = "NS_camp_soccer_H.png"
-        field_image = Image.open(field_image_path)
-        field_width, field_height = field_image.size
-        midfield_x = field_width / 2
-
-        field_image_thirds = Image.open("NS_camp_soccer_V_T.png")
-        field_width_thirds, field_height_thirds = field_image_thirds.size
-
-        df_xy = df_events.dropna(subset=["XY"]).copy()
-        df_xy[["X", "Y"]] = df_xy["XY"].str.split(";", expand=True).astype(int)
-
-        # Tag shots as Goal vs Other
-        descriptor_text = df_xy[descriptor_cols].astype(str).agg(" ".join, axis=1)
-        df_xy["is_goal"] = descriptor_text.str.contains("goal", case=False, na=False)
-
-        # Colors: green for goals, red otherwise
-        df_xy["color"] = df_xy["is_goal"].map({True: "lime", False: "red"})
-
-        # Plot
-        fig, ax = plt.subplots(figsize=(12, 7))
-        ax.imshow(field_image, extent=[0, field_width, 0, field_height])
-
-        # Draw shots
-        ax.scatter(
-            df_xy["X"],
-            field_height - df_xy["Y"],
-            c=df_xy["color"],
-            edgecolors='white',
-            s=60
-        )
-
-        # Midfield Label
-        ax.set_xlim(0, field_width)
-        ax.set_ylim(0, field_height)
-        ax.set_title(f"Shot Locations – {selected_match} (Swarm → Right)", color=primary_color)
-        ax.axis('off')
-
-        st.pyplot(fig)
+            field_image_path = "NS_camp_soccer_H.png"
+            field_image = Image.open(field_image_path)
+            field_width, field_height = field_image.size
+            midfield_x = field_width / 2
+    
+            field_image_thirds = Image.open("NS_camp_soccer_V_T.png")
+            field_width_thirds, field_height_thirds = field_image_thirds.size
+    
+            df_xy = df_events.dropna(subset=["XY"]).copy()
+            df_xy[["X", "Y"]] = df_xy["XY"].str.split(";", expand=True).astype(int)
+    
+            # Tag shots as Goal vs Other
+            descriptor_text = df_xy[descriptor_cols].astype(str).agg(" ".join, axis=1)
+            df_xy["is_goal"] = descriptor_text.str.contains("goal", case=False, na=False)
+    
+            # Colors: green for goals, red otherwise
+            df_xy["color"] = df_xy["is_goal"].map({True: "lime", False: "red"})
+    
+            # Plot
+            fig, ax = plt.subplots(figsize=(12, 7))
+            ax.imshow(field_image, extent=[0, field_width, 0, field_height])
+    
+            # Draw shots
+            ax.scatter(
+                df_xy["X"],
+                field_height - df_xy["Y"],
+                c=df_xy["color"],
+                edgecolors='white',
+                s=60
+            )
+    
+            # Midfield Label
+            ax.set_xlim(0, field_width)
+            ax.set_ylim(0, field_height)
+            ax.set_title(f"Shot Locations – {selected_match} (Swarm → Right)", color=primary_color)
+            ax.axis('off')
+    
+            st.pyplot(fig)
 
 
         except Exception as e:
