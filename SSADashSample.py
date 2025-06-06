@@ -170,7 +170,7 @@ if report_type == "Match Report":
     with tab1:
         st.header("Match Event Table and Maps")
 
-            def generate_event_summary(df_events, match_name):
+        def generate_event_summary(df_events, match_name):
                 st.subheader(f"Event Summary – {match_name}")
         
                 core_cols = ["Category", "Start", "End"]
