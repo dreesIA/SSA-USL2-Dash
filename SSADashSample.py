@@ -338,7 +338,7 @@ if report_type == "Match Report":
         field_width_thirds, field_height_thirds = field_image_thirds.size
 
         df_xy = df_events.dropna(subset=["XY"]).copy()
-            df_xy[["X", "Y"]] = df_xy["XY"].str.split(";", expand=True).astype(int)
+        df_xy[["X", "Y"]] = df_xy["XY"].str.split(";", expand=True).astype(int)
 
         # Tag shots as Goal vs Other
         descriptor_text = df_xy[descriptor_cols].astype(str).agg(" ".join, axis=1)
