@@ -279,7 +279,41 @@ if report_type == "Match Report":
             st.image(event_image, caption=f"Event Table for {selected_match}", use_container_width=True)
 
            
-
+        # --- Sub-Category Tables ---
+        def show_event_subtable(df_events, category_keywords, title):
+            df = df_events.copy()
+            df.columns = df.columns.str.strip()
+            df["Category"] = df["Category"].astype(str).str.strip()
+            descriptor_cols = [col for col in df.columns if col.startswith("Des")]
+            desc_text = df[descriptor_cols].astype(str).agg(" ".join, axis=1).str.lower()
+        
+            mask = pd.Series([False] * len(df))
+            for kw in category_keywords:
+                mask |= df["Category"].str.lower().str.contains(kw.lower())
+                mask |= desc_text.str.contains(kw.lower())
+        
+            sub_df = df[mask].copy()
+            core_cols = ["Category", "Start", "End"]
+            des_cols = [col for col in df.columns if col.startswith("Des") and df[col].notna().sum() > 0][:4]
+            sub_df = sub_df[core_cols + des_cols + (["XY"] if "XY" in df.columns else [])]
+        
+            if not sub_df.empty:
+                with st.expander(f"▶️ {title} ({len(sub_df)} events)"):
+                    st.dataframe(sub_df.reset_index(drop=True), use_container_width=True)
+            else:
+                with st.expander(f"▶️ {title} (No events)"):
+                    st.info(f"No {title.lower()} found.")
+        
+        # --- Call for each sub-table ---
+        st.markdown("### 🧩 Event Sub-Tables")
+        show_event_subtable(df_events, ["cross"], "Crosses")
+        show_event_subtable(df_events, ["free kick"], "Free Kicks")
+        show_event_subtable(df_events, ["corner"], "Corner Kicks")
+        show_event_subtable(df_events, ["throw"], "Throw-ins")
+        show_event_subtable(df_events, ["regain"], "Regains")
+        show_event_subtable(df_events, ["paz"], "PAZ Entries")
+        show_event_subtable(df_events, ["a3e"], "Zone 3 Entries")
+        show_event_subtable(df_events, ["goal kick"], "Goal Kicks")
 
             
 
