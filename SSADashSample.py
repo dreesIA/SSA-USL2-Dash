@@ -202,9 +202,6 @@ if report_type == "Match Report":
     with tab1:
         st.header("Match Event Table and Maps")
 
-        generate_event_summary(df_events, selected_match)
-
-
 
         # --- Match selection ---
         event_files = {
@@ -257,7 +254,7 @@ if report_type == "Match Report":
                 st.error(f"Failed to load data for {selected_match}: {e}")
                 st.stop()
 
-
+        generate_event_summary(df_events, selected_match)
            
         try:
 
