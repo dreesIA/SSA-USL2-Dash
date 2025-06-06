@@ -239,7 +239,7 @@ if report_type == "Match Report":
                     mask &= ~desc_text.str.contains("opp") & ~df["Category"].str.lower().str.contains("opp")
                 return mask.sum()
         
-                summary = {
+            summary = {
                     "Shots On Target": [count_events("Shot") + count_events("Goal"), count_events("Shot", True) + count_events("Goal", True)],
                     "Shots": [count_events("Shot"), count_events("Shot", True)],
                     "Blocked Shots": [count_events("Blocked"), count_events("Blocked", True)],
@@ -253,7 +253,7 @@ if report_type == "Match Report":
                     "Goal Kicks": [count_events("Goal Kick"), count_events("Goal Kick", True)],
                     
                 }
-                return summary
+            return summary
         
         # --- Show Dynamic Summary Table ---
         st.markdown("### 📊 Match Summary – Central Stats")
