@@ -278,12 +278,7 @@ if report_type == "Match Report":
             event_image = Image.open(image_path)
             st.image(event_image, caption=f"Event Table for {selected_match}", use_container_width=True)
 
-            # --- Event Table Display ---
-            core_cols = ["Category", "Start", "End"]
-            descriptor_cols = [col for col in df_events.columns if "Des" in str(col)]
-            non_empty_des = [col for col in descriptor_cols if df_events[col].notna().sum() > 0][:4]
-            event_df = df_events[core_cols + non_empty_des].dropna(subset=["Category", "Start", "End"], how="all")
-            st.dataframe(event_df, use_container_width=True)
+           
 
 
             
