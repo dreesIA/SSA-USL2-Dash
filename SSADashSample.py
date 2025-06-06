@@ -251,8 +251,9 @@ if report_type == "Match Report":
                     "Corner Kicks": [count_events("Corner"), count_events("Corner", True)],
                     "Free Kicks": [count_events("Free Kick"), count_events("Free Kick", True)],
                     "Goal Kicks": [count_events("Goal Kick"), count_events("Goal Kick", True)],
-                    }
-                        return summary
+                    
+                }
+                return summary
         
         # --- Show Dynamic Summary Table ---
         st.markdown("### 📊 Match Summary – Central Stats")
