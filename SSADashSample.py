@@ -294,33 +294,44 @@ with col3:
 
 # Loop through stats and format
 for stat, (swarm, opp) in summary_stats.items():
+    # Header row
+col1, col2, col3 = st.columns([1.5, 2, 1.5])
+with col1:
+    st.markdown("<div style='text-align:center; font-weight:bold; font-size:18px;'>Swarm</div>", unsafe_allow_html=True)
+with col2:
+    st.markdown("<div style='text-align:center; font-weight:bold; font-size:18px;'>Metric</div>", unsafe_allow_html=True)
+with col3:
+    st.markdown("<div style='text-align:center; font-weight:bold; font-size:18px;'>Opponent</div>", unsafe_allow_html=True)
+
+# Table rows
+for stat, (swarm, opp) in summary_stats.items():
     col1, col2, col3 = st.columns([1.5, 2, 1.5])
 
-    # Determine colors
-    color_swarm = "#3CB371" if swarm > opp else "#D72638" if swarm < opp else "#CCCCCC"
-    color_opp = "#3CB371" if opp > swarm else "#D72638" if opp < swarm else "#CCCCCC"
+    # Color coding
+    color_swarm = "#3CB371" if swarm > opp else "#D72638" if swarm < opp else "#A9A9A9"
+    color_opp = "#3CB371" if opp > swarm else "#D72638" if opp < swarm else "#A9A9A9"
 
-    # Adjust font size if this is the "Shots" row
-    font_size = "24px" if stat.lower() == "shots" else "18px"
-    pad = "4px 8px"  # slimmer pill shape
+    # Larger font for "Shots" row
+    is_shots = stat.lower() == "shots"
+    font_size = "24px" if is_shots else "16px"
+    box_style = "padding:4px 10px; border-radius:10px;"
 
     with col1:
         st.markdown(
-            f"<div style='text-align:center; background-color:{color_swarm}; color:white; "
-            f"padding:{pad}; border-radius:6px; font-size:{font_size};'>{swarm}</div>",
-            unsafe_allow_html=True,
+            f"<div style='text-align:center; background-color:{color_swarm}; color:white; {box_style} font-size:{font_size};'>{swarm}</div>",
+            unsafe_allow_html=True
         )
     with col2:
         st.markdown(
-            f"<div style='text-align:center; font-weight:bold; font-size:16px;'>{stat}</div>",
-            unsafe_allow_html=True,
+            f"<div style='text-align:center; font-weight:bold; font-size:{font_size};'>{stat}</div>",
+            unsafe_allow_html=True
         )
     with col3:
         st.markdown(
-            f"<div style='text-align:center; background-color:{color_opp}; color:white; "
-            f"padding:{pad}; border-radius:6px; font-size:{font_size};'>{opp}</div>",
-            unsafe_allow_html=True,
+            f"<div style='text-align:center; background-color:{color_opp}; color:white; {box_style} font-size:{font_size};'>{opp}</div>",
+            unsafe_allow_html=True
         )
+
 
 
            
