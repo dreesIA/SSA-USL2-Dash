@@ -256,7 +256,10 @@ if report_type == "Match Report":
                 ],
                 "PAZ Entries": [count_events("PAZ"), count_events("PAZ", True)],
                 "Crosses": [count_events("Cross"), count_events("Cross", True)],
-                "Zone 3 Entries": [count_events("A3E"), count_events("OPP A3E")],
+                "Zone 3 Entries": [
+                    count_events("A3E"),
+                    count_events("A3E", is_opp=True)
+                ],
                 "Regains": [count_events("Regain"), count_events("Regain", True)],
                 "Fouls Won": [count_events("Foul Won"), count_events("OPP Foul Won")],
                 "Corner Kicks": [count_events("Corner"), count_events("Corner", True)],
