@@ -288,7 +288,7 @@ if report_type == "Match Report":
         with col1:
             st.markdown("<div style='text-align:center; font-weight:bold; font-size:16px;'>Swarm</div>", unsafe_allow_html=True)
         with col2:
-            st.markdown("<div style='text-align:center; font-weight:bold; font-size:16px;'>Metric</div>", unsafe_allow_html=True)
+            st.markdown("<div style='text-align:center; font-weight:bold; font-size:16px;'></div>", unsafe_allow_html=True)
         with col3:
             st.markdown("<div style='text-align:center; font-weight:bold; font-size:16px;'>Opponent</div>", unsafe_allow_html=True)
         
@@ -299,7 +299,7 @@ if report_type == "Match Report":
             color_swarm = "#3CB371" if swarm > opp else "#D72638" if swarm < opp else "#A9A9A9"
             color_opp = "#3CB371" if opp > swarm else "#D72638" if opp < swarm else "#A9A9A9"
         
-            font_size = "24px" if stat.lower() == "shots" else "16px"
+            font_size = "24px" if stat.lower() == "score" else "16px"
             box_style = "padding:2px 6px; border-radius:10px;"
         
             with col1:
