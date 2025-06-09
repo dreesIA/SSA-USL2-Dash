@@ -244,7 +244,11 @@ if report_type == "Match Report":
                 return mask.sum()
         
             summary = {
-                # ✅ Only count goals or saves for shots on target
+                "Score": [
+                    count_events("Shot", descriptors_only=["goal"]),
+                    count_events("Shot", is_opp=True, descriptors_only=["goal"])
+                ],
+                            
                 "Shots On Target": [
                     count_events("Shot", descriptors_only=["goal", "save"]),
                     count_events("Shot", is_opp=True, descriptors_only=["goal", "save"])
