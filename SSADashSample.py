@@ -254,6 +254,7 @@ if report_type == "Match Report":
                     count_events("Shot", descriptors_only=["block"]),
                     count_events("Shot", is_opp=True, descriptors_only=["block"])
                 ],
+                "Finishing Zone Entries":[count_events("FZE"), count_events("FZE",True)],
                 "PAZ Entries": [count_events("PAZ"), count_events("PAZ", True)],
                 "Crosses": [count_events("Cross"), count_events("Cross", True)],
                 "Zone 3 Entries": [
