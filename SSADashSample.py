@@ -284,14 +284,29 @@ if report_type == "Match Report":
         
         for stat, (swarm, opp) in summary_stats.items():
             col1, col2, col3 = st.columns([1.5, 2, 1.5])
+        
+            # Determine colors
+            color_swarm = "#3CB371" if swarm > opp else "#D72638" if swarm < opp else "#CCCCCC"
+            color_opp = "#3CB371" if opp > swarm else "#D72638" if opp < swarm else "#CCCCCC"
+        
             with col1:
-                color = "green" if swarm > opp else "red" if swarm < opp else "white"
-                st.markdown(f"<div style='text-align:center; color:{color}; font-size:20px;'>{swarm}</div>", unsafe_allow_html=True)
+                st.markdown(
+                    f"<div style='text-align:center; background-color:{color_swarm}; color:white; "
+                    f"padding:6px; border-radius:8px; font-size:18px;'>{swarm}</div>",
+                    unsafe_allow_html=True,
+                )
             with col2:
-                st.markdown(f"<div style='text-align:center; font-weight:bold;'>{stat}</div>", unsafe_allow_html=True)
+                st.markdown(
+                    f"<div style='text-align:center; font-weight:bold; font-size:16px;'>{stat}</div>",
+                    unsafe_allow_html=True,
+                )
             with col3:
-                color = "green" if opp > swarm else "red" if opp < swarm else "white"
-                st.markdown(f"<div style='text-align:center; color:{color}; font-size:20px;'>{opp}</div>", unsafe_allow_html=True)
+                st.markdown(
+                    f"<div style='text-align:center; background-color:{color_opp}; color:white; "
+                    f"padding:6px; border-radius:8px; font-size:18px;'>{opp}</div>",
+                    unsafe_allow_html=True,
+                )
+
 
            
         try:
