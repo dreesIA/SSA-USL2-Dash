@@ -283,29 +283,44 @@ if report_type == "Match Report":
         summary_stats = generate_match_summary(df_events)
         
         for stat, (swarm, opp) in summary_stats.items():
-            col1, col2, col3 = st.columns([1.5, 2, 1.5])
-        
-            # Determine colors
-            color_swarm = "#3CB371" if swarm > opp else "#D72638" if swarm < opp else "#CCCCCC"
-            color_opp = "#3CB371" if opp > swarm else "#D72638" if opp < swarm else "#CCCCCC"
-        
-            with col1:
-                st.markdown(
-                    f"<div style='text-align:center; background-color:{color_swarm}; color:white; "
-                    f"padding:6px; border-radius:8px; font-size:18px;'>{swarm}</div>",
-                    unsafe_allow_html=True,
-                )
-            with col2:
-                st.markdown(
-                    f"<div style='text-align:center; font-weight:bold; font-size:16px;'>{stat}</div>",
-                    unsafe_allow_html=True,
-                )
-            with col3:
-                st.markdown(
-                    f"<div style='text-align:center; background-color:{color_opp}; color:white; "
-                    f"padding:6px; border-radius:8px; font-size:18px;'>{opp}</div>",
-                    unsafe_allow_html=True,
-                )
+            # Add headers above the columns
+col1, col2, col3 = st.columns([1.5, 2, 1.5])
+with col1:
+    st.markdown("<div style='text-align:center; font-weight:bold; font-size:16px;'>Swarm</div>", unsafe_allow_html=True)
+with col2:
+    st.markdown("")  # empty space
+with col3:
+    st.markdown("<div style='text-align:center; font-weight:bold; font-size:16px;'>Opponent</div>", unsafe_allow_html=True)
+
+# Loop through stats and format
+for stat, (swarm, opp) in summary_stats.items():
+    col1, col2, col3 = st.columns([1.5, 2, 1.5])
+
+    # Determine colors
+    color_swarm = "#3CB371" if swarm > opp else "#D72638" if swarm < opp else "#CCCCCC"
+    color_opp = "#3CB371" if opp > swarm else "#D72638" if opp < swarm else "#CCCCCC"
+
+    # Adjust font size if this is the "Shots" row
+    font_size = "24px" if stat.lower() == "shots" else "18px"
+    pad = "4px 8px"  # slimmer pill shape
+
+    with col1:
+        st.markdown(
+            f"<div style='text-align:center; background-color:{color_swarm}; color:white; "
+            f"padding:{pad}; border-radius:6px; font-size:{font_size};'>{swarm}</div>",
+            unsafe_allow_html=True,
+        )
+    with col2:
+        st.markdown(
+            f"<div style='text-align:center; font-weight:bold; font-size:16px;'>{stat}</div>",
+            unsafe_allow_html=True,
+        )
+    with col3:
+        st.markdown(
+            f"<div style='text-align:center; background-color:{color_opp}; color:white; "
+            f"padding:{pad}; border-radius:6px; font-size:{font_size};'>{opp}</div>",
+            unsafe_allow_html=True,
+        )
 
 
            
