@@ -295,14 +295,14 @@ if report_type == "Match Report":
             # Loop through stats and format
             for stat, (swarm, opp) in summary_stats.items():
                 # Header row
-            col1, col2, col3 = st.columns([1.5, 2, 1.5])
-            with col1:
-                st.markdown("<div style='text-align:center; font-weight:bold; font-size:18px;'>Swarm</div>", unsafe_allow_html=True)
-            with col2:
-                st.markdown("<div style='text-align:center; font-weight:bold; font-size:18px;'>Metric</div>", unsafe_allow_html=True)
-            with col3:
-                st.markdown("<div style='text-align:center; font-weight:bold; font-size:18px;'>Opponent</div>", unsafe_allow_html=True)
-            
+                col1, col2, col3 = st.columns([1.5, 2, 1.5])
+                with col1:
+                    st.markdown("<div style='text-align:center; font-weight:bold; font-size:18px;'>Swarm</div>", unsafe_allow_html=True)
+                with col2:
+                    st.markdown("<div style='text-align:center; font-weight:bold; font-size:18px;'>Metric</div>", unsafe_allow_html=True)
+                with col3:
+                    st.markdown("<div style='text-align:center; font-weight:bold; font-size:18px;'>Opponent</div>", unsafe_allow_html=True)
+                
             # Table rows
             for stat, (swarm, opp) in summary_stats.items():
                 col1, col2, col3 = st.columns([1.5, 2, 1.5])
