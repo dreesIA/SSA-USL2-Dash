@@ -261,7 +261,10 @@ if report_type == "Match Report":
                     count_events("A3E", is_opp=True)
                 ],
                 "Regains": [count_events("Regain"), count_events("Regain", True)],
-                "Fouls Won": [count_events("Foul Won"), count_events("OPP Foul Won")],
+                "Fouls Won": [
+                    count_events("Foul Won"),
+                    count_events("Foul Won", is_opp=True)
+                ],
                 "Corner Kicks": [count_events("Corner"), count_events("Corner", True)],
                 "Free Kicks": [count_events("Free Kick"), count_events("Free Kick", True)],
                 "Goal Kicks": [count_events("Goal Kick"), count_events("Goal Kick", True)],
