@@ -250,7 +250,10 @@ if report_type == "Match Report":
                     count_events("Shot", is_opp=True, descriptors_only=["goal", "save"])
                 ],
                 "Shots": [count_events("Shot"), count_events("Shot", True)],
-                "Blocked Shots": [count_events("Blocked"), count_events("Blocked", True)],
+                "Blocked Shots": [
+                    count_events("Shot", descriptors_only=["blocked"]),
+                    count_events("Shot", is_opp=True, descriptors_only=["blocked"])
+                ],
                 "PAZ Entries": [count_events("PAZ"), count_events("PAZ", True)],
                 "Crosses": [count_events("Cross"), count_events("Cross", True)],
                 "Zone 3 Entries": [count_events("A3E"), count_events("OPP A3E")],
