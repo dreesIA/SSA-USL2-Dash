@@ -235,13 +235,18 @@ if report_type == "Match Report":
             def count_events(keyword, is_opp=False, descriptors_only=None):
                 mask = df["Category"].str.lower().str.contains(keyword.lower())
                 if descriptors_only:
-                    # Restrict to only those with specific descriptor keywords
                     mask &= desc_text.str.contains("|".join(descriptors_only))
                 if is_opp:
                     mask &= desc_text.str.contains("opp") | df["Category"].str.lower().str.contains("opp")
                 else:
                     mask &= ~desc_text.str.contains("opp") & ~df["Category"].str.lower().str.contains("opp")
-                return mask.sum()
+        
+                # If averaging, return per-match average
+                if selected_match == "All Matches (Average)":
+                    match_counts = df[mask].groupby("Match").size()
+                    return round(match_counts.mean(), 1)
+                else:
+                    return mask.sum()
         
             summary = {
                 "Score": [
