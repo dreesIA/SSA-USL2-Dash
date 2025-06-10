@@ -41,6 +41,8 @@ match_files = {
     "5.21 vs Tennessee SC": "SSA Swarm USL Mens 2 Games Statsports Reports - 5.21 Swarm USL 2 Vs TN SC.csv",
     "5.25 vs East Atlanta FC": "SSA Swarm USL Mens 2 Games Statsports Reports - 5.25 SSA Swarm USL 2 vs East Atlanta.csv",
     "5.31 vs Dothan United SC": "SSA Swarm USL Mens 2 Games Statsports Reports - 5.31 Swarm USL 2 vs Dothan.csv",
+    "6.4 vs Asheville City SC": "SSA Swarm USL Mens 2 Games Statsports Reports - 6.4 Swarm USL 2 vs Asheville.csv",
+    "6.7 vs Dothan United SC": "SSA Swarm USL Mens 2 Games Statsports Reports - 6.7 Swarm USL 2 vs Dothan FC .csv"
     
 }
 
@@ -181,6 +183,7 @@ if report_type == "Match Report":
             "5.31 vs Dothan United SC": "SSA v Dothan USL2 05.31.25.xlsx",
             
             
+            
 
             # Add more matches and their corresponding file names here
         }
@@ -190,6 +193,8 @@ if report_type == "Match Report":
         "5.21 vs Tennessee SC": "TSC New Event Image.png",
         "5.25 vs East Atlanta FC": "East Atlanta Event Data Screenshot.png",
         "5.31 vs Dothan United SC": "Dothan Event Image.png",
+        "6.4 vs Asheville City SC": "Asheville Event Image.png",
+        "6.7 vs Dothan United FC": "Dothan2 Event Image.png",
         
         
         }
