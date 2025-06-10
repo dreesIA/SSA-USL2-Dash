@@ -436,7 +436,7 @@ if report_type == "Match Report":
         except Exception as e:
             st.error(f"Failed to load data for {selected_match}: {e}")
 
-        # --- Cross Map ---
+      '''  # --- Cross Map ---
         st.subheader("Cross Map")
 
         # Filter for crosses with coordinates
@@ -600,6 +600,7 @@ if report_type == "Match Report":
 
         else:
             st.info("No regains with coordinates found in this match.")
+    '''
 
     
 
