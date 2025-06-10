@@ -327,7 +327,7 @@ if report_type == "Match Report":
 
 
            
-        try:
+        '''try:
 
             # Display event image
             st.subheader("Event Table")
@@ -336,7 +336,7 @@ if report_type == "Match Report":
             st.image(event_image, caption=f"Event Table for {selected_match}", use_container_width=True)
 
         except Exception as e:
-            st.error(f"Error displaying event table: {e}")
+            st.error(f"Error displaying event table: {e}")'''
 
            
         # --- Sub-Category Tables ---
