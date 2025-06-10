@@ -181,6 +181,8 @@ if report_type == "Match Report":
             "5.21 vs Tennessee SC": "SSA USL2 v TSC 05.21.25.xlsx",
             "5.25 vs East Atlanta FC": "SSA USL2 v EAFC 05.25.25.xlsx",
             "5.31 vs Dothan United SC": "SSA v Dothan USL2 05.31.25.xlsx",
+            "6.4 vs Asheville City SC": "SSA USL2 v Asheville City SC 06.04.25.xlsx",
+            "6.7 vs Dothan United SC": "SSA USL2 v Dothan2 06.07.25.xlsx",
             
             
             
