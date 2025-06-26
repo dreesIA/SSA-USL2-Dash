@@ -949,6 +949,8 @@ def render_radar_analysis(match_df, full_df, half_option, selected_player):
             )
             
             st.plotly_chart(fig, use_container_width=True)
+
+            st.markdown("<br><br>", unsafe_allow_html=True)
             
             # Player strengths and weaknesses
             col1, col2 = st.columns(2)
