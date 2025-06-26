@@ -519,7 +519,7 @@ def render_event_analysis(selected_match):
                 if stat == "Score":
                     st.markdown(f"<div style='text-align: center; font-size: 3em; color: {swarm_color}; font-weight: bold;'>{swarm}</div>", unsafe_allow_html=True)
                 else:
-                    st.metric("", swarm, label=None)
+                    st.metric("", swarm)
             
             with col2:
                 st.markdown(f"<div style='text-align: center; padding-top: 20px; font-weight: bold;'>{stat}</div>", unsafe_allow_html=True)
