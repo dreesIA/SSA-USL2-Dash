@@ -855,8 +855,8 @@ def render_enhanced_shot_map(df_events, selected_match):
             st.metric("Conversion Rate", f"{conversion_rate:.1f}%")
         
     except Exception as e:
-        st.error(f"Error creating shot map: {str(e)}") y0=0, x1=50, y1=65,
-                      line=dict(color="white", width=2)
+        st.error(f"Error creating shot map: {str(e)}") (y0=0, x1=50, y1=65,
+                      line=dict(color="white", width=2))
         
         st.plotly_chart(fig, use_container_width=True)
         
