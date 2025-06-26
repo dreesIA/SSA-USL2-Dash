@@ -429,6 +429,9 @@ def render_match_report():
     with col5:
         st.markdown(create_metric_card("Work Rate", f"{work_rate:.0f}"), unsafe_allow_html=True)
     
+    # Add spacing between metrics and tabs
+    st.markdown("<br><br>", unsafe_allow_html=True)
+    
     # Tabbed content
     tab1, tab2, tab3, tab4, tab5 = st.tabs(["📊 Event Analysis", "📈 Performance Charts", "📉 Trends", "🎯 Radar Analysis", "📋 Data Table"])
     
@@ -451,27 +454,46 @@ def render_event_analysis(selected_match):
     """Render event analysis section"""
     st.markdown("### ⚽ Match Event Analysis")
     
-    if selected_match == "All Matches (Average)":
-        st.info("Event analysis is available for individual matches only.")
-        return
-    
     try:
-        # Load event data
-        xls_path = EVENT_FILES.get(selected_match)
-        if not xls_path:
-            st.warning("Event data not available for this match.")
-            return
-        
-        xls = pd.ExcelFile(xls_path)
-        df_events = xls.parse("Nacsport")
-        
-        # Generate match summary
-        summary_stats = generate_enhanced_match_summary(df_events)
+        if selected_match == "All Matches (Average)":
+            # Load all event data
+            all_events = []
+            for match, file_path in EVENT_FILES.items():
+                try:
+                    xls = pd.ExcelFile(file_path)
+                    df_temp = xls.parse("Nacsport")
+                    df_temp["Match"] = match
+                    all_events.append(df_temp)
+                except Exception as e:
+                    st.warning(f"Could not load event data for {match}: {e}")
+            
+            if not all_events:
+                st.error("No event data available across matches.")
+                return
+            
+            df_events = pd.concat(all_events, ignore_index=True)
+            
+            # Generate aggregated match summary
+            summary_stats = generate_enhanced_match_summary_aggregate(df_events)
+            
+            st.markdown("#### 📊 Average Match Summary (All Matches)")
+            
+        else:
+            # Load single match event data
+            xls_path = EVENT_FILES.get(selected_match)
+            if not xls_path:
+                st.warning("Event data not available for this match.")
+                return
+            
+            xls = pd.ExcelFile(xls_path)
+            df_events = xls.parse("Nacsport")
+            
+            # Generate match summary
+            summary_stats = generate_enhanced_match_summary(df_events)
+            
+            st.markdown("#### 📊 Match Summary")
         
         # Display summary in a visually appealing way
-        st.markdown("#### 📊 Match Summary")
-        
-        # Create two columns for team comparison
         col_swarm, col_vs, col_opp = st.columns([2, 1, 2])
         
         with col_swarm:
@@ -509,20 +531,31 @@ def render_event_analysis(selected_match):
                     st.metric("", opp, label=None)
         
         # Event categories breakdown
-        with st.expander("📊 Detailed Event Breakdown", expanded=False):
-            event_categories = ["Crosses", "Free Kicks", "Corner Kicks", "Throw-ins", "Regains", "PAZ Entries", "Zone 3 Entries"]
+        if selected_match == "All Matches (Average)":
+            with st.expander("📊 Average Event Breakdown Across All Matches", expanded=False):
+                event_categories = ["Crosses", "Free Kicks", "Corner Kicks", "Throw-ins", "Regains", "PAZ Entries", "Zone 3 Entries"]
+                
+                for category in event_categories:
+                    show_enhanced_event_subtable_aggregate(df_events, [category.lower()], category)
             
-            for category in event_categories:
-                show_enhanced_event_subtable(df_events, [category.lower()], category)
-        
-        # Display event image if available
-        if selected_match in EVENT_IMAGES:
-            st.markdown("#### 📸 Event Visualization")
-            try:
-                event_image = Image.open(EVENT_IMAGES[selected_match])
-                st.image(event_image, caption=f"Event Table - {selected_match}", use_container_width=True)
-            except:
-                st.warning("Event visualization not available.")
+            # Show match-by-match breakdown
+            with st.expander("📈 Match-by-Match Event Comparison", expanded=False):
+                render_match_by_match_events(df_events)
+        else:
+            with st.expander("📊 Detailed Event Breakdown", expanded=False):
+                event_categories = ["Crosses", "Free Kicks", "Corner Kicks", "Throw-ins", "Regains", "PAZ Entries", "Zone 3 Entries"]
+                
+                for category in event_categories:
+                    show_enhanced_event_subtable(df_events, [category.lower()], category)
+            
+            # Display event image if available
+            if selected_match in EVENT_IMAGES:
+                st.markdown("#### 📸 Event Visualization")
+                try:
+                    event_image = Image.open(EVENT_IMAGES[selected_match])
+                    st.image(event_image, caption=f"Event Table - {selected_match}", use_container_width=True)
+                except:
+                    st.warning("Event visualization not available.")
         
         # Shot map
         render_enhanced_shot_map(df_events, selected_match)
@@ -565,6 +598,122 @@ def generate_enhanced_match_summary(df_events):
     }
     
     return summary
+
+def generate_enhanced_match_summary_aggregate(df_events):
+    """Generate aggregated match summary statistics for all matches"""
+    df = df_events.copy()
+    df.columns = df.columns.str.strip()
+    df["Category"] = df["Category"].astype(str).str.strip()
+    descriptor_cols = [col for col in df.columns if col.startswith("Des")]
+    desc_text = df[descriptor_cols].astype(str).agg(" ".join, axis=1).str.lower()
+    
+    # Get unique matches
+    matches = df["Match"].unique()
+    num_matches = len(matches)
+    
+    def count_events_avg(keyword, is_opp=False, descriptors_only=None):
+        total_count = 0
+        for match in matches:
+            match_df = df[df["Match"] == match]
+            match_desc_text = match_df[descriptor_cols].astype(str).agg(" ".join, axis=1).str.lower()
+            
+            mask = match_df["Category"].str.lower().str.contains(keyword.lower())
+            if descriptors_only:
+                mask &= match_desc_text.str.contains("|".join(descriptors_only))
+            if is_opp:
+                mask &= match_desc_text.str.contains("opp") | match_df["Category"].str.lower().str.contains("opp")
+            else:
+                mask &= ~match_desc_text.str.contains("opp") & ~match_df["Category"].str.lower().str.contains("opp")
+            total_count += mask.sum()
+        
+        return round(total_count / num_matches, 1)
+    
+    summary = {
+        "Avg Goals": [
+            count_events_avg("Shot", descriptors_only=["goal"]),
+            count_events_avg("Shot", is_opp=True, descriptors_only=["goal"])
+        ],
+        "Avg Shots": [count_events_avg("Shot"), count_events_avg("Shot", True)],
+        "Avg On Target": [
+            count_events_avg("Shot", descriptors_only=["goal", "save"]),
+            count_events_avg("Shot", is_opp=True, descriptors_only=["goal", "save"])
+        ],
+        "Avg Corners": [count_events_avg("Corner"), count_events_avg("Corner", True)],
+        "Avg Fouls": [count_events_avg("Foul Won"), count_events_avg("Foul Won", True)],
+        "Avg PAZ Entries": [count_events_avg("PAZ"), count_events_avg("PAZ", True)],
+    }
+    
+    return summary
+
+def show_enhanced_event_subtable_aggregate(df_events, keywords, title):
+    """Show aggregated event subtable with match breakdown"""
+    df = df_events.copy()
+    df.columns = df.columns.str.strip()
+    
+    # Get events for this category across all matches
+    mask = pd.Series([False] * len(df))
+    for kw in keywords:
+        mask |= df["Category"].str.lower().str.contains(kw.lower())
+    
+    sub_df = df[mask]
+    
+    if not sub_df.empty:
+        # Show average count
+        matches = sub_df["Match"].unique()
+        avg_count = len(sub_df) / len(matches)
+        
+        st.markdown(f"**{title}** (Average: {avg_count:.1f} per match)")
+        
+        # Show breakdown by match
+        match_counts = sub_df["Match"].value_counts().sort_index()
+        
+        # Create a simple bar chart
+        fig = px.bar(
+            x=match_counts.index,
+            y=match_counts.values,
+            labels={"x": "Match", "y": "Count"},
+            title=f"{title} by Match",
+            height=300
+        )
+        
+        fig.update_layout(
+            plot_bgcolor=ThemeConfig.CARD_BACKGROUND,
+            paper_bgcolor=ThemeConfig.BACKGROUND_COLOR,
+            font=dict(color=ThemeConfig.TEXT_COLOR),
+            xaxis=dict(tickangle=-45),
+            showlegend=False
+        )
+        
+        st.plotly_chart(fig, use_container_width=True)
+    else:
+        st.info(f"No {title.lower()} found.")
+
+def render_match_by_match_events(df_events):
+    """Render match-by-match event comparison"""
+    st.markdown("#### Match-by-Match Event Statistics")
+    
+    # Create summary for each match
+    matches = df_events["Match"].unique()
+    match_summaries = []
+    
+    for match in matches:
+        match_df = df_events[df_events["Match"] == match]
+        summary = generate_enhanced_match_summary(match_df)
+        
+        match_data = {"Match": match}
+        for stat, (swarm, opp) in summary.items():
+            match_data[f"{stat} (Swarm)"] = swarm
+            match_data[f"{stat} (Opp)"] = opp
+        
+        match_summaries.append(match_data)
+    
+    summary_df = pd.DataFrame(match_summaries)
+    
+    # Display as a styled table
+    st.dataframe(
+        summary_df.style.background_gradient(subset=[col for col in summary_df.columns if "Swarm" in col], cmap='RdYlGn'),
+        use_container_width=True
+    )
 
 def show_enhanced_event_subtable(df_events, keywords, title):
     """Show enhanced event subtable with better formatting"""
@@ -619,6 +768,14 @@ def render_enhanced_shot_map(df_events, selected_match):
         df_shots.loc[desc_text.str.contains("block"), "Outcome"] = "Blocked"
         df_shots.loc[desc_text.str.contains("wide|over"), "Outcome"] = "Off Target"
         
+        # Add match info for hover if aggregated
+        if selected_match == "All Matches (Average)" and "Match" in df_shots.columns:
+            hover_data = ["Match", "Outcome"]
+            title = "Shot Locations - All Matches Combined"
+        else:
+            hover_data = ["Outcome"]
+            title = f"Shot Locations - {selected_match}"
+        
         # Create Plotly figure
         fig = px.scatter(
             df_shots,
@@ -626,6 +783,7 @@ def render_enhanced_shot_map(df_events, selected_match):
             y="Y",
             color="Outcome",
             size=[20] * len(df_shots),
+            hover_data=hover_data,
             color_discrete_map={
                 "Goal": ThemeConfig.SUCCESS_COLOR,
                 "Saved": ThemeConfig.WARNING_COLOR,
@@ -633,7 +791,7 @@ def render_enhanced_shot_map(df_events, selected_match):
                 "Off Target": ThemeConfig.PRIMARY_COLOR,
                 "Shot": ThemeConfig.TEXT_COLOR
             },
-            title=f"Shot Locations - {selected_match}",
+            title=title,
             height=600
         )
         
@@ -677,6 +835,80 @@ def render_enhanced_shot_map(df_events, selected_match):
         
         # Center line
         fig.add_shape(type="line", x0=50, y0=0, x1=50, y1=65,
+                      line=dict(color="white", width=2))
+        
+        st.plotly_chart(fig, use_container_width=True)
+        
+        # Shot statistics
+        col1, col2, col3 = st.columns(3)
+        
+        total_shots = len(df_shots)
+        goals = len(df_shots[df_shots["Outcome"] == "Goal"])
+        on_target = len(df_shots[df_shots["Outcome"].isin(["Goal", "Saved"])])
+        
+        with col1:
+            st.metric("Total Shots", total_shots)
+        with col2:
+            st.metric("Goals", goals)
+        with col3:
+            conversion_rate = (goals / total_shots * 100) if total_shots > 0 else 0
+            st.metric("Conversion Rate", f"{conversion_rate:.1f}%")
+        
+    except Exception as e:
+        st.error(f"Error creating shot map: {str(e)}") y0=0, x1=50, y1=65,
+                      line=dict(color="white", width=2))
+        
+        st.plotly_chart(fig, use_container_width=True)
+        
+        # Shot statistics
+        col1, col2, col3, col4 = st.columns(4)
+        
+        total_shots = len(df_shots)
+        goals = len(df_shots[df_shots["Outcome"] == "Goal"])
+        on_target = len(df_shots[df_shots["Outcome"].isin(["Goal", "Saved"])])
+        
+        if selected_match == "All Matches (Average)":
+            num_matches = df_shots["Match"].nunique() if "Match" in df_shots.columns else 1
+            avg_shots = total_shots / num_matches
+            avg_goals = goals / num_matches
+            
+            with col1:
+                st.metric("Avg Shots/Match", f"{avg_shots:.1f}")
+            with col2:
+                st.metric("Avg Goals/Match", f"{avg_goals:.1f}")
+            with col3:
+                st.metric("Total Goals", goals)
+            with col4:
+                conversion_rate = (goals / total_shots * 100) if total_shots > 0 else 0
+                st.metric("Conversion Rate", f"{conversion_rate:.1f}%")
+        else:
+            with col1:
+                st.metric("Total Shots", total_shots)
+            with col2:
+                st.metric("Goals", goals)
+            with col3:
+                st.metric("On Target", on_target)
+            with col4:
+                conversion_rate = (goals / total_shots * 100) if total_shots > 0 else 0
+                st.metric("Conversion Rate", f"{conversion_rate:.1f}%")
+        
+        # Additional analysis for aggregated data
+        if selected_match == "All Matches (Average)" and "Match" in df_shots.columns:
+            with st.expander("📊 Shot Analysis by Match"):
+                shot_summary = df_shots.groupby("Match").agg({
+                    "Outcome": "count",
+                    "X": lambda x: len(x[df_shots.loc[x.index, "Outcome"] == "Goal"])
+                }).rename(columns={"Outcome": "Total Shots", "X": "Goals"})
+                
+                shot_summary["Conversion %"] = (shot_summary["Goals"] / shot_summary["Total Shots"] * 100).round(1)
+                
+                st.dataframe(
+                    shot_summary.style.background_gradient(subset=["Conversion %"], cmap='RdYlGn'),
+                    use_container_width=True
+                )
+        
+    except Exception as e:
+        st.error(f"Error creating shot map: {str(e)}") y0=0, x1=50, y1=65,
                       line=dict(color="white", width=2))
         
         st.plotly_chart(fig, use_container_width=True)
@@ -949,8 +1181,6 @@ def render_radar_analysis(match_df, full_df, half_option, selected_player):
             )
             
             st.plotly_chart(fig, use_container_width=True)
-
-            st.markdown("<br><br>", unsafe_allow_html=True)
             
             # Player strengths and weaknesses
             col1, col2 = st.columns(2)
