@@ -528,7 +528,7 @@ def render_event_analysis(selected_match):
                 if stat == "Score":
                     st.markdown(f"<div style='text-align: center; font-size: 3em; color: {opp_color}; font-weight: bold;'>{opp}</div>", unsafe_allow_html=True)
                 else:
-                    st.metric("", opp, label=None)
+                    st.metric("", opp)
         
         # Event categories breakdown
         if selected_match == "All Matches (Average)":
