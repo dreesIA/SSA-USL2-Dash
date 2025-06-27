@@ -88,8 +88,10 @@ def get_ai_coach_insights(context, data_summary, api_key):
         return "Please enter your OpenAI API key in the sidebar to enable AI Coach insights."
     
     try:
-        # Set the API key
-        openai.api_key = api_key
+        from openai import OpenAI
+        
+        # Initialize client with API key
+        client = OpenAI(api_key=api_key)
         
         prompt = f"""
         You are an expert soccer coach analyzing performance data for SSA Swarm USL2 team.
@@ -110,7 +112,7 @@ def get_ai_coach_insights(context, data_summary, api_key):
         
         # Try GPT-4 first, fall back to GPT-3.5-turbo if not available
         try:
-            response = openai.ChatCompletion.create(
+            response = client.chat.completions.create(
                 model="gpt-4",
                 messages=[
                     {"role": "system", "content": "You are an expert soccer performance analyst and coach."},
@@ -119,25 +121,28 @@ def get_ai_coach_insights(context, data_summary, api_key):
                 temperature=0.7,
                 max_tokens=500
             )
-        except openai.error.InvalidRequestError as e:
-            if "model_not_found" in str(e) or "gpt-4" in str(e):
-                # Fallback to GPT-3.5-turbo
-                response = openai.ChatCompletion.create(
-                    model="gpt-3.5-turbo",
-                    messages=[
-                        {"role": "system", "content": "You are an expert soccer performance analyst and coach."},
-                        {"role": "user", "content": prompt}
-                    ],
-                    temperature=0.7,
-                    max_tokens=500
-                )
+            return response.choices[0].message.content
+        except Exception as e:
+            # If GPT-4 fails, try GPT-3.5-turbo
+            if "model" in str(e).lower() or "404" in str(e):
+                try:
+                    response = client.chat.completions.create(
+                        model="gpt-3.5-turbo",
+                        messages=[
+                            {"role": "system", "content": "You are an expert soccer performance analyst and coach."},
+                            {"role": "user", "content": prompt}
+                        ],
+                        temperature=0.7,
+                        max_tokens=500
+                    )
+                    return response.choices[0].message.content
+                except Exception as fallback_error:
+                    return f"AI Coach unavailable: {str(fallback_error)}. Please check your API key and ensure you have credits available."
             else:
-                raise e
-        
-        return response.choices[0].message["content"]
+                return f"AI Coach unavailable: {str(e)}. Please check your API key and ensure you have credits available."
     
     except Exception as e:
-        return f"AI Coach unavailable: {str(e)}. Make sure you have a valid OpenAI API key with credits available."
+        return f"AI Coach unavailable: {str(e)}. Please ensure you have the latest OpenAI library installed: pip install --upgrade openai"
 
 # AI Assistant Display Component
 def display_ai_assistant(context, data_summary, api_key):
