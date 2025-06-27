@@ -82,23 +82,16 @@ st.markdown(
 )
 
 # Initialize OpenAI client
-@st.cache_resource
-def init_openai():
-    """Initialize OpenAI client"""
-    # You'll need to set your API key
-    # Option 1: Set as environment variable
-    # Option 2: Use Streamlit secrets
-    # Option 3: Direct input (not recommended for production)
-    
-    api_key = st.sidebar.text_input("Enter OpenAI API Key:", type="password")
+def init_openai(api_key):
+    """Initialize OpenAI client with provided API key"""
     if api_key:
         return openai.OpenAI(api_key=api_key)
     return None
 
 # AI Assistant Coach Function
-def get_ai_coach_insights(context, data_summary):
+def get_ai_coach_insights(context, data_summary, api_key):
     """Get AI coach insights based on current context and data"""
-    client = init_openai()
+    client = init_openai(api_key)
     
     if not client:
         return "Please enter your OpenAI API key in the sidebar to enable AI Coach insights."
@@ -137,7 +130,7 @@ def get_ai_coach_insights(context, data_summary):
         return f"AI Coach unavailable: {str(e)}"
 
 # AI Assistant Display Component
-def display_ai_assistant(context, data_summary):
+def display_ai_assistant(context, data_summary, api_key):
     """Display AI assistant coach insights"""
     with st.expander("🤖 AI Assistant Coach", expanded=False):
         st.markdown('<div class="ai-assistant-box">', unsafe_allow_html=True)
@@ -145,7 +138,7 @@ def display_ai_assistant(context, data_summary):
         
         if st.button("Get AI Insights", key=f"ai_button_{context}"):
             with st.spinner("Analyzing data..."):
-                insights = get_ai_coach_insights(context, data_summary)
+                insights = get_ai_coach_insights(context, data_summary, api_key)
                 st.markdown(insights)
         
         st.markdown('</div>', unsafe_allow_html=True)
@@ -235,6 +228,11 @@ def crop_circle(image_path):
 logo = crop_circle("SSALogoTransparent.jpeg")
 st.sidebar.image(logo, width=250)
 
+# API Key input in sidebar
+st.sidebar.markdown("---")
+st.sidebar.markdown("### 🤖 AI Assistant Settings")
+api_key = st.sidebar.text_input("Enter OpenAI API Key:", type="password", help="Your OpenAI API key for AI Coach insights")
+
 # Sidebar report type (move this up)
 report_type = st.sidebar.selectbox("Select Report Type", [
     "Match Report", "Weekly Training Report", "Daily Training Report", "Compare Players"
@@ -296,7 +294,7 @@ if report_type == "Match Report":
     Average High Speed Running: {avg_hsr} m
     """
     
-    display_ai_assistant("Match Report Overview", data_summary)
+    display_ai_assistant("Match Report Overview", data_summary, api_key)
 
     st.subheader("Performance Charts")
     tab1, tab2, tab3, tab4 = st.tabs(["Event Data", "Bar Chart", "Fluctuation", "Radar Chart"])
@@ -461,7 +459,7 @@ if report_type == "Match Report":
         Total Events Analyzed: {len(df_events)}
         """
         
-        display_ai_assistant("Match Event Analysis", event_data_summary)
+        display_ai_assistant("Match Event Analysis", event_data_summary, api_key)
 
         try:
             # Display event image
@@ -628,7 +626,7 @@ if report_type == "Match Report":
                 Metrics tracked: {', '.join(metrics)}
                 """
                 
-                display_ai_assistant("Player Fluctuation Analysis", player_trends_summary)
+                display_ai_assistant("Player Fluctuation Analysis", player_trends_summary, api_key)
             else:
                 st.info("Select one or more players to show player-specific trends.")
         else:
@@ -660,7 +658,7 @@ if report_type == "Match Report":
             {chr(10).join(player_percentiles)}
             """
             
-            display_ai_assistant("Player Radar Analysis", radar_summary)
+            display_ai_assistant("Player Radar Analysis", radar_summary, api_key)
 
 # Weekly Training Report
 elif report_type == "Weekly Training Report":
@@ -714,7 +712,7 @@ elif report_type == "Weekly Training Report":
             - High Speed Running: {team_avg_hsr} m
             """
             
-            display_ai_assistant("Weekly Team Training Analysis", team_overview_summary)
+            display_ai_assistant("Weekly Team Training Analysis", team_overview_summary, api_key)
             
             for metric in metrics:
                 st.write(f"### {metric}")
@@ -773,7 +771,7 @@ elif report_type == "Weekly Training Report":
             Sessions completed: {player_data['Session'].nunique()}
             """
             
-            display_ai_assistant("Individual Player Analysis", player_stats_summary)
+            display_ai_assistant("Individual Player Analysis", player_stats_summary, api_key)
 
         elif view_mode == "Compare Players":
             players = weekly_df["Player Name"].unique()
@@ -817,7 +815,7 @@ elif report_type == "Weekly Training Report":
                 {chr(10).join([f"- {metric}: " + ', '.join([f"{p} ({summary.loc[p, metric]:.1f})" for p in selected]) for metric in metrics[:3]])}
                 """
                 
-                display_ai_assistant("Player Comparison Analysis", comparison_summary)
+                display_ai_assistant("Player Comparison Analysis", comparison_summary, api_key)
 
 elif report_type == "Daily Training Report":
     session = st.sidebar.selectbox("Select Session", list(training_files.keys()))
@@ -858,7 +856,7 @@ elif report_type == "Daily Training Report":
         - High Speed Running: {daily_avg_hsr} m
         """
         
-        display_ai_assistant("Daily Training Analysis", daily_summary)
+        display_ai_assistant("Daily Training Analysis", daily_summary, api_key)
         
         for metric in metrics:
             st.write(f"### {metric}")
@@ -971,7 +969,7 @@ elif report_type == "Compare Players":
         {chr(10).join([f"- {metric}: " + ', '.join([f"{p} ({summary.loc[p, metric]:.1f})" for p in selected]) for metric in metrics[:4]])}
         """
         
-        display_ai_assistant("Match Player Comparison", match_comparison_summary)
+        display_ai_assistant("Match Player Comparison", match_comparison_summary, api_key)
         
         for metric in metrics:
             st.write(f"### {metric}")
