@@ -516,7 +516,9 @@ def render_match_report(api_key):
     with col5:
         st.markdown(create_metric_card("Work Rate", f"{work_rate:.0f}"), unsafe_allow_html=True)
 
+    
     st.markdown("<br><br>", unsafe_allow_html=True)
+
     
     # AI Assistant for Match Overview
     match_summary = f"""
