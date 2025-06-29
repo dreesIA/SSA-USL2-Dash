@@ -271,10 +271,18 @@ def get_ai_coach_insights(context, data_summary, api_key):
 def display_ai_assistant(context, data_summary, api_key):
     """Display AI assistant coach insights"""
     with st.expander("🤖 AI Assistant Coach", expanded=False):
-        if st.button("Get AI Insights", key=f"ai_button_{context}_{datetime.now().timestamp()}"):
+        # Create a unique key based on context
+        button_key = f"ai_button_{context.replace(' ', '_').replace('/', '_').replace(':', '_')}"
+        
+        if st.button("Get AI Insights", key=button_key):
             with st.spinner("Analyzing data..."):
                 insights = get_ai_coach_insights(context, data_summary, api_key)
-                st.markdown(insights)
+                # Store insights in session state
+                st.session_state[f"insights_{button_key}"] = insights
+        
+        # Display insights if they exist in session state
+        if f"insights_{button_key}" in st.session_state:
+            st.markdown(st.session_state[f"insights_{button_key}"])
 
 # Utility Functions
 @st.cache_data
@@ -455,7 +463,7 @@ def main():
     st.markdown("---")
     st.markdown(f"""
     <p style='text-align: center; color: {ThemeConfig.TEXT_COLOR}; opacity: 0.6;'>
-        Built for SSA Swarm by Idrees I. | Powered by Statsports & Nacsport | Enhanced with AI Insights | © 2025
+        Built for SSA Swarm | Powered by Statsports & Nacsport | Enhanced with AI Insights | © 2025
     </p>
     """, unsafe_allow_html=True)
 
@@ -515,10 +523,9 @@ def render_match_report(api_key):
         st.markdown(create_metric_card("HSR", f"{avg_hsr:.0f} m"), unsafe_allow_html=True)
     with col5:
         st.markdown(create_metric_card("Work Rate", f"{work_rate:.0f}"), unsafe_allow_html=True)
-
     
-    st.markdown("<br>", unsafe_allow_html=True)
-
+    # Add spacing between metrics and AI assistant
+    st.markdown("<br><br>", unsafe_allow_html=True)
     
     # AI Assistant for Match Overview
     match_summary = f"""
@@ -534,7 +541,8 @@ def render_match_report(api_key):
     """
     
     display_ai_assistant("Match Overview Analysis", match_summary, api_key)
-
+    
+    # Add spacing between AI assistant and tabs
     st.markdown("<br>", unsafe_allow_html=True)
     
     # Tabbed content
@@ -624,7 +632,7 @@ def render_event_analysis(selected_match, api_key):
                 if stat in ["Score", "Avg Goals"]:
                     st.markdown(f"<div style='text-align: center; font-size: 3em; color: {swarm_color}; font-weight: bold;'>{swarm}</div>", unsafe_allow_html=True)
                 else:
-                    st.metric("", swarm)
+                    st.metric("", swarm, label=None)
             
             with col2:
                 st.markdown(f"<div style='text-align: center; padding-top: 20px; font-weight: bold;'>{stat}</div>", unsafe_allow_html=True)
@@ -633,7 +641,7 @@ def render_event_analysis(selected_match, api_key):
                 if stat in ["Score", "Avg Goals"]:
                     st.markdown(f"<div style='text-align: center; font-size: 3em; color: {opp_color}; font-weight: bold;'>{opp}</div>", unsafe_allow_html=True)
                 else:
-                    st.metric("", opp)
+                    st.metric("", opp, label=None)
         
         # AI Assistant for Event Analysis
         event_summary = "\n".join([f"{stat}: Swarm {swarm} - Opponent {opp}" for stat, (swarm, opp) in summary_stats.items()])
