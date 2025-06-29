@@ -525,7 +525,7 @@ def render_match_report(api_key):
         st.markdown(create_metric_card("Work Rate", f"{work_rate:.0f}"), unsafe_allow_html=True)
     
     # Add spacing between metrics and AI assistant
-    st.markdown("<br><br>", unsafe_allow_html=True)
+    st.markdown("<br>", unsafe_allow_html=True)
     
     # AI Assistant for Match Overview
     match_summary = f"""
