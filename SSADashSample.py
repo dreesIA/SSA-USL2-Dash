@@ -525,7 +525,7 @@ def render_match_report(api_key):
         st.markdown(create_metric_card("Work Rate", f"{work_rate:.0f}"), unsafe_allow_html=True)
     
     # Add spacing between metrics and AI assistant
-    st.markdown("<br>", unsafe_allow_html=True)
+    st.markdown("<br><br>", unsafe_allow_html=True)
     
     # AI Assistant for Match Overview
     match_summary = f"""
@@ -632,7 +632,7 @@ def render_event_analysis(selected_match, api_key):
                 if stat in ["Score", "Avg Goals"]:
                     st.markdown(f"<div style='text-align: center; font-size: 3em; color: {swarm_color}; font-weight: bold;'>{swarm}</div>", unsafe_allow_html=True)
                 else:
-                    st.metric("", swarm)
+                    st.metric("", swarm, label=None)
             
             with col2:
                 st.markdown(f"<div style='text-align: center; padding-top: 20px; font-weight: bold;'>{stat}</div>", unsafe_allow_html=True)
@@ -641,7 +641,7 @@ def render_event_analysis(selected_match, api_key):
                 if stat in ["Score", "Avg Goals"]:
                     st.markdown(f"<div style='text-align: center; font-size: 3em; color: {opp_color}; font-weight: bold;'>{opp}</div>", unsafe_allow_html=True)
                 else:
-                    st.metric("", opp)
+                    st.metric("", opp, label=None)
         
         # AI Assistant for Event Analysis
         event_summary = "\n".join([f"{stat}: Swarm {swarm} - Opponent {opp}" for stat, (swarm, opp) in summary_stats.items()])
@@ -1117,17 +1117,34 @@ def render_performance_charts(match_df, api_key):
         st.warning("Please select at least one metric to display.")
         return
     
-    # AI Assistant for Performance Analysis
-    performance_summary = f"""
+    # Prepare detailed data for AI Assistant
+    player_stats = match_df.groupby("Player Name")[selected_metrics].mean().round(2)
+    
+    # Create detailed summary for AI
+    detailed_summary = f"""
     Performance Metrics Analysis:
     Metrics analyzed: {', '.join(selected_metrics)}
-    Total players: {len(match_df['Player Name'].unique())}
+    Total players: {len(player_stats)}
     
-    Top performers need recognition and bottom performers need support.
-    Consider position-specific requirements when evaluating metrics.
+    Player Performance Data:
     """
     
-    display_ai_assistant("Performance Metrics Analysis", performance_summary, api_key)
+    # Add top and bottom performers for each metric
+    for metric in selected_metrics:
+        metric_data = player_stats[metric].sort_values(ascending=False)
+        top_3 = metric_data.head(3)
+        bottom_3 = metric_data.tail(3)
+        team_avg = metric_data.mean()
+        
+        detailed_summary += f"\n\n{metric}:"
+        detailed_summary += f"\n- Team Average: {team_avg:.2f}"
+        detailed_summary += f"\n- Top Performers: {', '.join([f'{player} ({value:.2f})' for player, value in top_3.items()])}"
+        detailed_summary += f"\n- Bottom Performers: {', '.join([f'{player} ({value:.2f})' for player, value in bottom_3.items()])}"
+        detailed_summary += f"\n- Range: {metric_data.min():.2f} to {metric_data.max():.2f}"
+    
+    detailed_summary += "\n\nConsider position-specific requirements when evaluating metrics."
+    
+    display_ai_assistant("Performance Metrics Analysis", detailed_summary, api_key)
     
     # Create charts for each metric
     for metric in selected_metrics:
