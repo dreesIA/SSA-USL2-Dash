@@ -455,7 +455,7 @@ def main():
     st.markdown("---")
     st.markdown(f"""
     <p style='text-align: center; color: {ThemeConfig.TEXT_COLOR}; opacity: 0.6;'>
-        Built for SSA Swarm by Idrees I.| Powered by Statsports & Nacsport | Enhanced with AI Insights | © 2025
+        Built for SSA Swarm by Idrees I. | Powered by Statsports & Nacsport | Enhanced with AI Insights | © 2025
     </p>
     """, unsafe_allow_html=True)
 
