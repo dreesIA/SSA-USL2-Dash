@@ -534,6 +534,8 @@ def render_match_report(api_key):
     """
     
     display_ai_assistant("Match Overview Analysis", match_summary, api_key)
+
+    st.markdown("<br>", unsafe_allow_html=True)
     
     # Tabbed content
     tab1, tab2, tab3, tab4, tab5 = st.tabs(["📊 Event Analysis", "📈 Performance Charts", "📉 Trends", "🎯 Radar Analysis", "📋 Data Table"])
