@@ -2181,7 +2181,7 @@ def render_individual_performance(df_daily, api_key):
     display_ai_assistant("Individual Session Performance", individual_summary, api_key)
     
     # Performance insights
-    st.markdown("#### 💡 Performance Insights")
+    st.markdown("#### Performance Insights")
     
     # Find strengths and areas for improvement
     metric_percentiles = dict(zip(METRICS, percentile_data))
@@ -2311,7 +2311,7 @@ def render_comparative_analysis(df_daily, api_key):
 
 def render_player_comparison(api_key):
     """Render player comparison across matches"""
-    st.markdown(f"<h2 style='color: {ThemeConfig.PRIMARY_COLOR};'>🔄 Player Comparison Tool</h2>", unsafe_allow_html=True)
+    st.markdown(f"<h2 style='color: {ThemeConfig.PRIMARY_COLOR};'> Player Comparison Tool</h2>", unsafe_allow_html=True)
     
     # Data source selection
     data_source = st.sidebar.radio(
@@ -2638,7 +2638,7 @@ def render_trend_comparison(df, players, api_key):
     st.plotly_chart(fig, use_container_width=True)
     
     # Growth analysis
-    st.markdown("#### 📊 Growth Analysis")
+    st.markdown("#### Growth Analysis")
     
     growth_data = []
     for player in players:
