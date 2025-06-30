@@ -339,11 +339,8 @@ def render_landing_page():
 # Modify the main function to handle page navigation
 def main():
     """Main application logic with page navigation"""
-    # Initialize file configurations if not already done
-    if not MATCH_FILES and st.session_state.page == 'landing':
-        # If on landing page and no files loaded, just show landing page
-        render_landing_page()
-        return
+    # Declare globals at the beginning of the function
+    global MATCH_FILES, TRAINING_FILES, EVENT_FILES, EVENT_IMAGES
     
     # Check if we're on landing page or team dashboard
     if st.session_state.page == 'landing':
@@ -360,7 +357,6 @@ def main():
             return
         
         # Update global file configurations with team-specific files
-        global MATCH_FILES, TRAINING_FILES, EVENT_FILES, EVENT_IMAGES
         MATCH_FILES = team_config['match_files']
         TRAINING_FILES = team_config['training_files']
         EVENT_FILES = team_config['event_files']
