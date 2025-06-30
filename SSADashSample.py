@@ -188,6 +188,12 @@ st.markdown(f"""
     </style>
 """, unsafe_allow_html=True)
 
+# File Configuration - Initialize with empty dictionaries that will be populated based on selected team
+MATCH_FILES = {}
+TRAINING_FILES = {}
+EVENT_FILES = {}
+EVENT_IMAGES = {}
+
 # Team Configuration
 TEAMS_CONFIG = {
     "SSA Swarm USL2": {
@@ -333,6 +339,12 @@ def render_landing_page():
 # Modify the main function to handle page navigation
 def main():
     """Main application logic with page navigation"""
+    # Initialize file configurations if not already done
+    if not MATCH_FILES and st.session_state.page == 'landing':
+        # If on landing page and no files loaded, just show landing page
+        render_landing_page()
+        return
+    
     # Check if we're on landing page or team dashboard
     if st.session_state.page == 'landing':
         render_landing_page()
