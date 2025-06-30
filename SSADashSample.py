@@ -2805,7 +2805,7 @@ def render_statistical_comparison(df, players, api_key):
 
 def render_player_profile(api_key):
     """Render comprehensive player profile"""
-    st.markdown(f"<h2 style='color: {ThemeConfig.PRIMARY_COLOR};'>👤 Player Profile</h2>", unsafe_allow_html=True)
+    st.markdown(f"<h2 style='color: {ThemeConfig.PRIMARY_COLOR};'> Player Profile</h2>", unsafe_allow_html=True)
     
     # Load all available data
     all_match_data = pd.concat([load_data(path) for path in MATCH_FILES.values()], ignore_index=True)
