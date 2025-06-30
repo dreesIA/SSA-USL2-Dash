@@ -546,7 +546,7 @@ def render_match_report(api_key):
     st.markdown("<br>", unsafe_allow_html=True)
     
     # Tabbed content
-    tab1, tab2, tab3, tab4, tab5 = st.tabs(["Event Analysis", "Performance Charts", "Trends", "Radar Analysis", "Data Table"])
+    tab1, tab2, tab3, tab4, tab5 = st.tabs([" Event Analysis", "Performance Charts", "Trends", "Radar Analysis", "Data Table"])
     
     with tab1:
         render_event_analysis(selected_match, api_key)
