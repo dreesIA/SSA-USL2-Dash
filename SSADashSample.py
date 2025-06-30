@@ -270,7 +270,7 @@ def get_ai_coach_insights(context, data_summary, api_key):
 # AI Assistant Display Component
 def display_ai_assistant(context, data_summary, api_key):
     """Display AI assistant coach insights"""
-    with st.expander("🤖 AI Assistant Coach", expanded=False):
+    with st.expander(" AI Assistant Coach", expanded=False):
         # Create a unique key based on context
         button_key = f"ai_button_{context.replace(' ', '_').replace('/', '_').replace(':', '_')}"
         
@@ -416,14 +416,14 @@ def setup_sidebar():
     st.sidebar.markdown("---")
     
     # API Key input
-    st.sidebar.markdown("### 🤖 AI Assistant Settings")
+    st.sidebar.markdown("### AI Assistant Settings")
     api_key = st.sidebar.text_input("Enter OpenAI API Key:", type="password", help="Your OpenAI API key for AI Coach insights")
     
     st.sidebar.markdown("---")
     
     # Report type selection
     report_type = st.sidebar.selectbox(
-        "📊 Select Report Type",
+        "Select Report Type",
         ["Match Report", "Weekly Training Report", "Daily Training Report", "Compare Players", "Player Profile"],
         help="Choose the type of analysis you want to view"
     )
@@ -471,7 +471,7 @@ def render_match_report(api_key):
     """Render the match report section"""
     # Match selection
     match_options = ["All Matches (Average)"] + list(MATCH_FILES.keys())
-    selected_match = st.sidebar.selectbox("🏟️ Select Match", match_options)
+    selected_match = st.sidebar.selectbox("Select Match", match_options)
     
     # Load data
     if selected_match == "All Matches (Average)":
@@ -484,11 +484,11 @@ def render_match_report(api_key):
         return
     
     # Half selection
-    half_option = st.sidebar.selectbox("⏱️ Select Half", ["Total", "First Half", "Second Half"])
+    half_option = st.sidebar.selectbox("Select Half", ["Total", "First Half", "Second Half"])
     
     # Player selection
     players = df["Player Name"].unique().tolist()
-    selected_player = st.sidebar.selectbox("👤 Select Player", ["All"] + players)
+    selected_player = st.sidebar.selectbox("Select Player", ["All"] + players)
     
     # Filter data
     match_df = df.copy()
@@ -498,10 +498,10 @@ def render_match_report(api_key):
         match_df = match_df[match_df["Session Type"] == half_option]
     
     # Display match title
-    st.markdown(f"<h2 style='color: {ThemeConfig.PRIMARY_COLOR};'>📊 {selected_match}</h2>", unsafe_allow_html=True)
+    st.markdown(f"<h2 style='color: {ThemeConfig.PRIMARY_COLOR};'> {selected_match}</h2>", unsafe_allow_html=True)
     
     # Key Metrics Dashboard
-    st.markdown("### 🎯 Key Performance Indicators")
+    st.markdown("### Key Performance Indicators")
     
     col1, col2, col3, col4, col5 = st.columns(5)
     
@@ -546,7 +546,7 @@ def render_match_report(api_key):
     st.markdown("<br>", unsafe_allow_html=True)
     
     # Tabbed content
-    tab1, tab2, tab3, tab4, tab5 = st.tabs(["📊 Event Analysis", "📈 Performance Charts", "📉 Trends", "🎯 Radar Analysis", "📋 Data Table"])
+    tab1, tab2, tab3, tab4, tab5 = st.tabs(["Event Analysis", "Performance Charts", "Trends", "Radar Analysis", "Data Table"])
     
     with tab1:
         render_event_analysis(selected_match, api_key)
@@ -565,7 +565,7 @@ def render_match_report(api_key):
 
 def render_event_analysis(selected_match, api_key):
     """Render event analysis section - now works for all matches including average"""
-    st.markdown("### ⚽ Match Event Analysis")
+    st.markdown("### Match Event Analysis")
     
     try:
         if selected_match == "All Matches (Average)":
@@ -589,7 +589,7 @@ def render_event_analysis(selected_match, api_key):
             # Generate aggregated match summary
             summary_stats = generate_enhanced_match_summary_aggregate(df_events)
             
-            st.markdown("#### 📊 Average Match Summary (All Matches)")
+            st.markdown("#### Average Match Summary (All Matches)")
             
         else:
             # Load single match event data
@@ -604,7 +604,7 @@ def render_event_analysis(selected_match, api_key):
             # Generate match summary
             summary_stats = generate_enhanced_match_summary(df_events)
             
-            st.markdown("#### 📊 Match Summary")
+            st.markdown("#### Match Summary")
         
         # Display summary in a visually appealing way
         col_swarm, col_vs, col_opp = st.columns([2, 1, 2])
@@ -657,17 +657,17 @@ def render_event_analysis(selected_match, api_key):
         
         # Event categories breakdown
         if selected_match == "All Matches (Average)":
-            with st.expander("📊 Average Event Breakdown Across All Matches", expanded=False):
+            with st.expander("Average Event Breakdown Across All Matches", expanded=False):
                 event_categories = ["Crosses", "Free Kicks", "Corner Kicks", "Throw-ins", "Regains", "PAZ Entries", "Zone 3 Entries"]
                 
                 for category in event_categories:
                     show_enhanced_event_subtable_aggregate(df_events, [category.lower()], category)
             
             # Show match-by-match breakdown
-            with st.expander("📈 Match-by-Match Event Comparison", expanded=False):
+            with st.expander("Match-by-Match Event Comparison", expanded=False):
                 render_match_by_match_events(df_events)
         else:
-            with st.expander("📊 Detailed Event Breakdown", expanded=False):
+            with st.expander("Detailed Event Breakdown", expanded=False):
                 event_categories = ["Crosses", "Free Kicks", "Corner Kicks", "Throw-ins", "Regains", "PAZ Entries", "Zone 3 Entries"]
                 
                 for category in event_categories:
@@ -675,7 +675,7 @@ def render_event_analysis(selected_match, api_key):
             
             # Display event image if available
             if selected_match in EVENT_IMAGES:
-                st.markdown("#### 📸 Event Visualization")
+                st.markdown("#### Event Visualization")
                 try:
                     event_image = Image.open(EVENT_IMAGES[selected_match])
                     st.image(event_image, caption=f"Event Table - {selected_match}", use_container_width=True)
@@ -869,7 +869,7 @@ def show_enhanced_event_subtable(df_events, keywords, title):
 
 def render_enhanced_shot_map(df_events, selected_match):
     """Render enhanced shot map with Plotly"""
-    st.markdown("#### ⚽ Shot Map Analysis")
+    st.markdown("#### Shot Map Analysis")
     
     try:
         # Filter for shots with XY coordinates
@@ -1042,7 +1042,7 @@ def render_enhanced_shot_map(df_events, selected_match):
         
         # Additional analysis for aggregated data
         if selected_match == "All Matches (Average)" and "Match" in df_shots.columns:
-            with st.expander("📊 Shot Analysis by Match"):
+            with st.expander("Shot Analysis by Match"):
                 shot_summary = df_shots.groupby("Match").agg({
                     "Outcome": "count",
                     "X": lambda x: len(x[df_shots.loc[x.index, "Outcome"] == "Goal"])
@@ -1104,7 +1104,7 @@ def render_enhanced_shot_map(df_events, selected_match):
 
 def render_performance_charts(match_df, api_key):
     """Render performance charts"""
-    st.markdown("### 📊 Performance Metrics by Player")
+    st.markdown("### Performance Metrics by Player")
     
     # Allow metric selection
     selected_metrics = st.multiselect(
@@ -1193,15 +1193,15 @@ def render_performance_charts(match_df, api_key):
             
             # Show top performers
             top_performers = chart_data.nlargest(3, metric)
-            with st.expander(f"🏆 Top 3 Performers - {metric}"):
+            with st.expander(f" Top 3 Performers - {metric}"):
                 for idx, (_, row) in enumerate(top_performers.iterrows(), 1):
-                    medal = "🥇" if idx == 1 else "🥈" if idx == 2 else "🥉"
+                    medal = "1" if idx == 1 else "2" if idx == 2 else "3"
                     st.markdown(f"{medal} **{row['Player Name']}**: {row[metric]:.2f}")
 
 def render_trend_analysis(selected_match, match_df, api_key):
     """Render trend analysis"""
     if selected_match == "All Matches (Average)":
-        st.markdown("### 📈 Team Performance Trends")
+        st.markdown("### Team Performance Trends")
         
         # Load all match data
         all_matches_data = []
@@ -1317,7 +1317,7 @@ def render_trend_analysis(selected_match, match_df, api_key):
             st.plotly_chart(fig, use_container_width=True)
             
             # Performance change analysis
-            with st.expander("📊 Performance Change Analysis"):
+            with st.expander("Performance Change Analysis"):
                 for player in selected_players:
                     player_matches = player_avg[player_avg["Player Name"] == player].sort_values("Match")
                     if len(player_matches) > 1:
@@ -1326,7 +1326,7 @@ def render_trend_analysis(selected_match, match_df, api_key):
                         change = ((last_match_val - first_match_val) / first_match_val) * 100
                         
                         change_color = ThemeConfig.SUCCESS_COLOR if change > 0 else ThemeConfig.PRIMARY_COLOR
-                        change_symbol = "📈" if change > 0 else "📉"
+                        change_symbol = "Up" if change > 0 else "Down"
                         
                         st.markdown(f"""
                         **{player}**: {change_symbol} {change:+.1f}% change
@@ -1337,7 +1337,7 @@ def render_trend_analysis(selected_match, match_df, api_key):
 
 def render_radar_analysis(match_df, full_df, half_option, selected_player, api_key):
     """Render radar analysis"""
-    st.markdown("### 🎯 Player Radar Analysis")
+    st.markdown("### Player Radar Analysis")
     
     if selected_player == "All":
         # Multi-player comparison
@@ -1370,7 +1370,7 @@ def render_radar_analysis(match_df, full_df, half_option, selected_player, api_k
             st.plotly_chart(fig, use_container_width=True)
             
             # Performance comparison table
-            with st.expander("📊 Detailed Comparison"):
+            with st.expander("Detailed Comparison"):
                 comparison_df = selected_radar_df.round(2)
                 comparison_df["Overall Score"] = comparison_df.mean(axis=1).round(2)
                 comparison_df = comparison_df.sort_values("Overall Score", ascending=False)
@@ -1404,13 +1404,13 @@ def render_radar_analysis(match_df, full_df, half_option, selected_player, api_k
             col1, col2 = st.columns(2)
             
             with col1:
-                st.markdown("#### 💪 Strengths")
+                st.markdown("#### Strengths")
                 strengths = percentile_df[METRICS].T.nlargest(3, selected_player)
                 for metric, value in strengths.iterrows():
                     st.markdown(f"**{metric}**: {value[selected_player]:.0f}th percentile")
             
             with col2:
-                st.markdown("#### 📈 Areas for Improvement")
+                st.markdown("#### Areas for Improvement")
                 weaknesses = percentile_df[METRICS].T.nsmallest(3, selected_player)
                 for metric, value in weaknesses.iterrows():
                     st.markdown(f"**{metric}**: {value[selected_player]:.0f}th percentile")
@@ -1431,7 +1431,7 @@ def render_radar_analysis(match_df, full_df, half_option, selected_player, api_k
 
 def render_data_table(match_df):
     """Render data table with export options"""
-    st.markdown("### 📋 Raw Data View")
+    st.markdown("### Raw Data View")
     
     # Data filtering options
     col1, col2 = st.columns(2)
@@ -1473,7 +1473,7 @@ def render_data_table(match_df):
         # Export options
         csv = display_df.to_csv(index=False)
         st.download_button(
-            label="📥 Download as CSV",
+            label="Download as CSV",
             data=csv,
             file_name=f"match_data_{datetime.now().strftime('%Y%m%d_%H%M%S')}.csv",
             mime="text/csv"
@@ -1481,7 +1481,7 @@ def render_data_table(match_df):
 
 def render_weekly_training_report(api_key):
     """Render weekly training report"""
-    st.markdown(f"<h2 style='color: {ThemeConfig.PRIMARY_COLOR};'>📅 Weekly Training Report</h2>", unsafe_allow_html=True)
+    st.markdown(f"<h2 style='color: {ThemeConfig.PRIMARY_COLOR};'> Weekly Training Report</h2>", unsafe_allow_html=True)
     
     # Session selection
     selected_sessions = st.sidebar.multiselect(
@@ -1521,7 +1521,7 @@ def render_weekly_training_report(api_key):
 
 def render_team_overview(weekly_df, api_key):
     """Render team overview for weekly training"""
-    st.markdown("### 👥 Team Training Overview")
+    st.markdown("### Team Training Overview")
     
     # Calculate weekly totals and averages
     col1, col2, col3, col4 = st.columns(4)
@@ -1558,7 +1558,7 @@ def render_team_overview(weekly_df, api_key):
     display_ai_assistant("Weekly Team Training Analysis", team_summary, api_key)
     
     # Training load distribution
-    st.markdown("#### 📊 Training Load Distribution")
+    st.markdown("#### Training Load Distribution")
     
     # Create heatmap of player loads across sessions
     pivot_df = weekly_df.pivot_table(
@@ -1585,7 +1585,7 @@ def render_team_overview(weekly_df, api_key):
     st.plotly_chart(fig, use_container_width=True)
     
     # Player rankings
-    st.markdown("#### 🏆 Weekly Player Rankings")
+    st.markdown("#### Weekly Player Rankings")
     
     ranking_metric = st.selectbox(
         "Select ranking metric:",
@@ -1618,7 +1618,7 @@ def render_team_overview(weekly_df, api_key):
 
 def render_individual_analysis(weekly_df, api_key):
     """Render individual player analysis"""
-    st.markdown("### 👤 Individual Player Analysis")
+    st.markdown("### Individual Player Analysis")
     
     selected_player = st.sidebar.selectbox(
         "Select Player",
@@ -1647,7 +1647,7 @@ def render_individual_analysis(weekly_df, api_key):
         st.markdown(create_metric_card("Sessions", f"{sessions_completed}"), unsafe_allow_html=True)
     
     # Performance trends
-    st.markdown("#### 📈 Performance Trends")
+    st.markdown("#### Performance Trends")
     
     trend_metric = st.selectbox(
         "Select metric for trend analysis:",
@@ -1712,7 +1712,7 @@ def render_individual_analysis(weekly_df, api_key):
     display_ai_assistant("Individual Player Training Analysis", player_summary, api_key)
     
     # Percentile rankings
-    st.markdown("#### 🎯 Performance Rankings")
+    st.markdown("#### Performance Rankings")
     
     # Calculate percentiles for all metrics
     percentile_data = []
@@ -1768,7 +1768,7 @@ def render_individual_analysis(weekly_df, api_key):
 
 def render_session_comparison(weekly_df, api_key):
     """Render session comparison analysis"""
-    st.markdown("### 📊 Session Comparison")
+    st.markdown("### Session Comparison")
     
     # Session metrics overview
     session_summary = weekly_df.groupby("Session")[METRICS].mean().round(2)
@@ -1849,7 +1849,7 @@ def render_session_comparison(weekly_df, api_key):
 
 def render_load_management(weekly_df, api_key):
     """Render load management analysis"""
-    st.markdown("### 🏃 Load Management & Recovery")
+    st.markdown("### Load Management & Recovery")
     
     # Calculate load metrics
     weekly_df["Load Score"] = (
@@ -1861,7 +1861,7 @@ def render_load_management(weekly_df, api_key):
     )
     
     # Player load status
-    st.markdown("#### 🚦 Player Load Status")
+    st.markdown("#### Player Load Status")
     
     player_loads = weekly_df.groupby("Player Name")["Load Score"].agg(['mean', 'sum', 'std']).round(2)
     player_loads["Status"] = pd.cut(
@@ -1920,7 +1920,7 @@ def render_load_management(weekly_df, api_key):
     display_ai_assistant("Load Management Analysis", load_summary, api_key)
     
     # Detailed player load table
-    st.markdown("#### 📊 Detailed Load Analysis")
+    st.markdown("#### Detailed Load Analysis")
     
     load_display = player_loads.reset_index()
     load_display.columns = ["Player", "Avg Load", "Total Load", "Load Variability", "Status"]
@@ -1937,7 +1937,7 @@ def render_load_management(weekly_df, api_key):
     )
     
     # Load progression chart
-    st.markdown("#### 📈 Load Progression")
+    st.markdown("#### Load Progression")
     
     selected_players_load = st.multiselect(
         "Select players to track:",
@@ -1970,7 +1970,7 @@ def render_load_management(weekly_df, api_key):
 
 def render_daily_training_report(api_key):
     """Render daily training report"""
-    st.markdown(f"<h2 style='color: {ThemeConfig.PRIMARY_COLOR};'>📋 Daily Training Report</h2>", unsafe_allow_html=True)
+    st.markdown(f"<h2 style='color: {ThemeConfig.PRIMARY_COLOR};'> Daily Training Report</h2>", unsafe_allow_html=True)
     
     # Session selection
     selected_session = st.sidebar.selectbox(
@@ -1985,7 +1985,7 @@ def render_daily_training_report(api_key):
         st.error("No data available for this session.")
         return
     
-    st.markdown(f"### 📅 {selected_session}")
+    st.markdown(f"### {selected_session}")
     
     # Session overview metrics
     col1, col2, col3, col4 = st.columns(4)
@@ -2037,7 +2037,7 @@ def render_daily_training_report(api_key):
 
 def render_session_overview(df_daily, api_key):
     """Render session overview"""
-    st.markdown("### 📊 Session Overview")
+    st.markdown("### Session Overview")
     
     # Metric distribution
     selected_metric = st.selectbox(
@@ -2088,7 +2088,7 @@ def render_session_overview(df_daily, api_key):
     st.plotly_chart(fig, use_container_width=True)
     
     # Player rankings for the session
-    st.markdown("### 🏆 Session Rankings")
+    st.markdown("### Session Rankings")
     
     ranking_data = df_daily.copy()
     ranking_data["Overall Score"] = ranking_data[METRICS].mean(axis=1)
@@ -2098,7 +2098,7 @@ def render_session_overview(df_daily, api_key):
     col1, col2, col3 = st.columns(3)
     
     top_3 = ranking_data.head(3)
-    medals = ["🥇", "🥈", "🥉"]
+    medals = ["1", "2", "3"]
     
     for i, (col, (_, player)) in enumerate(zip([col1, col2, col3], top_3.iterrows())):
         with col:
@@ -2120,7 +2120,7 @@ def render_session_overview(df_daily, api_key):
 
 def render_individual_performance(df_daily, api_key):
     """Render individual performance for daily training"""
-    st.markdown("### 👤 Individual Performance Analysis")
+    st.markdown("### Individual Performance Analysis")
     
     selected_player = st.selectbox(
         "Select Player:",
@@ -2147,7 +2147,7 @@ def render_individual_performance(df_daily, api_key):
             ), unsafe_allow_html=True)
     
     # Percentile rankings
-    st.markdown("#### 📊 Percentile Rankings")
+    st.markdown("#### Percentile Rankings")
     
     percentile_data = []
     for metric in METRICS:
@@ -2191,18 +2191,18 @@ def render_individual_performance(df_daily, api_key):
     col1, col2 = st.columns(2)
     
     with col1:
-        st.markdown("**💪 Top Strengths:**")
+        st.markdown("** Top Strengths:**")
         for metric, percentile in strengths:
             st.markdown(f"- {metric}: {percentile:.0f}th percentile")
     
     with col2:
-        st.markdown("**📈 Areas for Development:**")
+        st.markdown("** Areas for Development:**")
         for metric, percentile in improvements:
             st.markdown(f"- {metric}: {percentile:.0f}th percentile")
 
 def render_comparative_analysis(df_daily, api_key):
     """Render comparative analysis for daily training"""
-    st.markdown("### 🔄 Comparative Analysis")
+    st.markdown("### Comparative Analysis")
     
     # Player selection
     players = st.multiselect(
@@ -2219,7 +2219,7 @@ def render_comparative_analysis(df_daily, api_key):
     comparison_df = df_daily[df_daily["Player Name"].isin(players)]
     
     # Metric comparison
-    st.markdown("#### 📊 Metric Comparison")
+    st.markdown("#### Metric Comparison")
     
     # Create grouped bar chart
     metrics_for_comparison = st.multiselect(
@@ -2258,7 +2258,7 @@ def render_comparative_analysis(df_daily, api_key):
         st.plotly_chart(fig, use_container_width=True)
     
     # Radar comparison
-    st.markdown("#### 🎯 Multi-Player Radar Analysis")
+    st.markdown("#### Multi-Player Radar Analysis")
     
     # Calculate percentiles
     percentile_data = []
@@ -2297,7 +2297,7 @@ def render_comparative_analysis(df_daily, api_key):
     display_ai_assistant("Player Comparison Analysis", comparison_summary, api_key)
     
     # Comparison table
-    st.markdown("#### 📋 Detailed Comparison")
+    st.markdown("#### Detailed Comparison")
     
     comparison_display = comparison_df[["Player Name"] + METRICS].set_index("Player Name")
     
@@ -2363,13 +2363,13 @@ def render_player_comparison(api_key):
 
 def render_overall_performance_comparison(df, players, api_key):
     """Render overall performance comparison"""
-    st.markdown("### 📊 Overall Performance Comparison")
+    st.markdown("### Overall Performance Comparison")
     
     # Calculate averages
     player_averages = df.groupby("Player Name")[METRICS].mean()
     
     # Performance scores
-    st.markdown("#### 🏆 Performance Scores")
+    st.markdown("#### Performance Scores")
     
     # Calculate weighted performance score
     weights = {
@@ -2396,7 +2396,7 @@ def render_overall_performance_comparison(df, players, api_key):
     for i, (_, row) in enumerate(scores_df.iterrows()):
         with cols[i]:
             rank = i + 1
-            medal = "🥇" if rank == 1 else "🥈" if rank == 2 else "🥉" if rank == 3 else "🏅"
+            medal = "1" if rank == 1 else "2" if rank == 2 else "3" if rank == 3 else " "
             
             st.markdown(f"""
             <div style='text-align: center; background-color: {ThemeConfig.CARD_BACKGROUND}; 
@@ -2422,7 +2422,7 @@ def render_overall_performance_comparison(df, players, api_key):
     display_ai_assistant("Overall Performance Comparison", overall_summary, api_key)
     
     # Detailed metrics comparison
-    st.markdown("#### 📈 Detailed Metrics")
+    st.markdown("#### Detailed Metrics")
     
     # Create spider plot
     percentile_data = []
@@ -2446,7 +2446,7 @@ def render_overall_performance_comparison(df, players, api_key):
     st.plotly_chart(fig, use_container_width=True)
     
     # Strengths and weaknesses matrix
-    st.markdown("#### 💪 Strengths & Weaknesses Matrix")
+    st.markdown("#### Strengths & Weaknesses Matrix")
     
     # Create heatmap
     normalized_data = (player_averages.loc[players] - player_averages.min()) / (player_averages.max() - player_averages.min())
@@ -2531,7 +2531,7 @@ def render_head_to_head_comparison(df, players, api_key):
     wins_p1 = sum(p1_data[metric].mean() > p2_data[metric].mean() for metric in METRICS)
     wins_p2 = len(METRICS) - wins_p1
     
-    st.markdown("#### 🏆 Summary")
+    st.markdown("#### Summary")
     col1, col2 = st.columns(2)
     
     with col1:
@@ -2571,7 +2571,7 @@ def render_head_to_head_comparison(df, players, api_key):
 
 def render_trend_comparison(df, players, api_key):
     """Render trend comparison analysis"""
-    st.markdown("### 📈 Trend Comparison Analysis")
+    st.markdown("### Trend Comparison Analysis")
     
     # Check if we have session/match info
     if "Session" in df.columns:
@@ -2653,7 +2653,7 @@ def render_trend_comparison(df, players, api_key):
                 "Initial": first_value,
                 "Final": last_value,
                 "Growth": growth,
-                "Status": "📈 Improving" if growth > 0 else "📉 Declining" if growth < 0 else "→ Stable"
+                "Status": "Improving" if growth > 0 else "Declining" if growth < 0 else "Stable"
             })
     
     if growth_data:
@@ -2686,13 +2686,13 @@ def render_trend_comparison(df, players, api_key):
 
 def render_statistical_comparison(df, players, api_key):
     """Render statistical comparison"""
-    st.markdown("### 📊 Statistical Analysis")
+    st.markdown("### Statistical Analysis")
     
     # Prepare data
     player_stats = df[df["Player Name"].isin(players)]
     
     # Distribution analysis
-    st.markdown("#### 📈 Distribution Analysis")
+    st.markdown("#### Distribution Analysis")
     
     selected_metric = st.selectbox(
         "Select metric for distribution analysis:",
@@ -2722,7 +2722,7 @@ def render_statistical_comparison(df, players, api_key):
     st.plotly_chart(fig, use_container_width=True)
     
     # Statistical summary
-    st.markdown("#### 📊 Statistical Summary")
+    st.markdown("#### Statistical Summary")
     
     summary_stats = []
     for player in players:
@@ -2768,7 +2768,7 @@ def render_statistical_comparison(df, players, api_key):
     display_ai_assistant("Statistical Comparison", stat_summary, api_key)
     
     # Consistency analysis
-    st.markdown("#### 🎯 Consistency Analysis")
+    st.markdown("#### Consistency Analysis")
     
     consistency_data = []
     for player in players:
@@ -2867,7 +2867,7 @@ def render_player_profile(api_key):
     display_ai_assistant("Player Profile Overview", profile_summary, api_key)
     
     # Profile tabs
-    tab1, tab2, tab3, tab4, tab5 = st.tabs(["📊 Overview", "📈 Performance Trends", "🎯 Strengths Analysis", "📋 Session History", "📄 Report"])
+    tab1, tab2, tab3, tab4, tab5 = st.tabs(["Overview", "Performance Trends", "Strengths Analysis", "Session History", "Report"])
     
     with tab1:
         render_player_overview(player_data, all_data, api_key)
@@ -2886,7 +2886,7 @@ def render_player_profile(api_key):
 
 def render_player_overview(player_data, all_data, api_key):
     """Render player overview section"""
-    st.markdown("### 📊 Performance Overview")
+    st.markdown("### Performance Overview")
     
     # Split by data source
     match_data = player_data[player_data["Data Source"] == "Match"]
@@ -2951,7 +2951,7 @@ def render_player_overview(player_data, all_data, api_key):
             st.info("No training data available")
     
     # Performance rating
-    st.markdown("#### 🏆 Performance Rating")
+    st.markdown("#### Performance Rating")
     
     # Calculate overall performance score
     weights = {
@@ -2991,7 +2991,7 @@ def render_player_overview(player_data, all_data, api_key):
 
 def render_player_trends(player_data, api_key):
     """Render player performance trends"""
-    st.markdown("### 📈 Performance Trends")
+    st.markdown("### Performance Trends")
     
     # Add session numbers for trending
     player_data = player_data.sort_index()
@@ -3064,7 +3064,7 @@ def render_player_trends(player_data, api_key):
         # Trend analysis
         if len(player_data) > 1:
             slope = z[0]
-            trend_direction = "📈 Improving" if slope > 0 else "📉 Declining" if slope < 0 else "→ Stable"
+            trend_direction = "Improving" if slope > 0 else "Declining" if slope < 0 else "Stable"
             change_per_session = abs(slope)
             
             col1, col2, col3 = st.columns(3)
@@ -3094,7 +3094,7 @@ def render_player_trends(player_data, api_key):
 
 def render_player_strengths(player_data, all_data, api_key):
     """Render player strengths analysis"""
-    st.markdown("### 🎯 Strengths & Development Areas")
+    st.markdown("### Strengths & Development Areas")
     
     # Calculate percentiles
     player_avg = player_data[METRICS].mean()
@@ -3122,16 +3122,16 @@ def render_player_strengths(player_data, all_data, api_key):
     col1, col2 = st.columns(2)
     
     with col1:
-        st.markdown("#### 💪 Core Strengths")
+        st.markdown("#### Core Strengths")
         for metric, percentile in sorted_metrics[:3]:
             if percentile >= 75:
-                badge = "🌟 Elite"
+                badge = "Elite"
                 color = ThemeConfig.SUCCESS_COLOR
             elif percentile >= 50:
-                badge = "✅ Strong"
+                badge = "Strong"
                 color = ThemeConfig.SECONDARY_COLOR
             else:
-                badge = "📊 Above Average"
+                badge = "Average"
                 color = ThemeConfig.ACCENT_COLOR
             
             st.markdown(f"""
@@ -3143,7 +3143,7 @@ def render_player_strengths(player_data, all_data, api_key):
             """, unsafe_allow_html=True)
     
     with col2:
-        st.markdown("#### 📈 Development Opportunities")
+        st.markdown("#### Development Opportunities")
         for metric, percentile in sorted_metrics[-3:]:
             improvement_potential = 100 - percentile
             
@@ -3177,7 +3177,7 @@ def render_player_strengths(player_data, all_data, api_key):
     display_ai_assistant("Strengths & Development Analysis", strengths_summary, api_key)
     
     # Performance consistency
-    st.markdown("#### 🎯 Performance Consistency")
+    st.markdown("#### Performance Consistency")
     
     consistency_scores = {}
     for metric in METRICS:
@@ -3216,7 +3216,7 @@ def render_player_strengths(player_data, all_data, api_key):
 
 def render_session_history(player_data):
     """Render detailed session history"""
-    st.markdown("### 📋 Session History")
+    st.markdown("### Session History")
     
     # Session filters
     col1, col2 = st.columns(2)
@@ -3271,13 +3271,13 @@ def render_session_history(player_data):
     )
     
     # Session statistics
-    with st.expander("📊 Session Statistics"):
+    with st.expander("Session Statistics"):
         session_stats = display_data[METRICS].describe().round(2)
         st.dataframe(session_stats, use_container_width=True)
 
 def render_player_report(player_data, all_data, player_name, api_key):
     """Generate comprehensive player report"""
-    st.markdown("### 📄 Player Report")
+    st.markdown("### Player Report")
     
     st.info("Generate a comprehensive PDF report with all player analytics.")
     
@@ -3349,7 +3349,7 @@ Total Sessions Analyzed: {len(player_data)}
             
             # Create download button
             st.download_button(
-                label="📥 Download Report",
+                label="Download Report",
                 data=report_content,
                 file_name=f"{player_name}_report_{datetime.now().strftime('%Y%m%d')}.md",
                 mime="text/markdown"
