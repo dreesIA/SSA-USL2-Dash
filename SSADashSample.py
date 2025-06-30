@@ -524,10 +524,25 @@ def display_ai_assistant(context, data_summary, api_key):
 def load_data(path):
     """Load and preprocess CSV data with caching"""
     try:
+        # Check if file exists
+        import os
+        if not os.path.exists(path):
+            st.error(f"File not found: {path}")
+            return pd.DataFrame()
+            
         df = pd.read_csv(path)
         df.columns = df.columns.str.strip()
+        
+        # Check for required columns
+        missing_cols = [col for col in ["Player Name"] if col not in df.columns]
+        if missing_cols:
+            st.error(f"Missing required columns in {path}: {missing_cols}")
+            return pd.DataFrame()
+            
         df.dropna(subset=["Player Name"], inplace=True)
-        df["Session Type"] = df["Session Type"].astype(str).str.strip().str.title()
+        
+        if "Session Type" in df.columns:
+            df["Session Type"] = df["Session Type"].astype(str).str.strip().str.title()
         
         # Convert metrics to numeric
         for col in METRICS:
@@ -710,7 +725,26 @@ def render_match_report(api_key):
     
     # Load data
     if selected_match == "All Matches (Average)":
-        df = pd.concat([load_data(path) for path in MATCH_FILES.values()], ignore_index=True)
+        # Load all match files with error handling
+        loaded_data = []
+        for match_name, file_path in MATCH_FILES.items():
+            try:
+                df_temp = load_data(file_path)
+                if not df_temp.empty:
+                    loaded_data.append(df_temp)
+                else:
+                    st.warning(f"No data found in {match_name}")
+            except Exception as e:
+                st.warning(f"Could not load data for {match_name}: {str(e)}")
+        
+        if not loaded_data:
+            st.error("No match data could be loaded. Please check that the data files exist in the correct location.")
+            st.info("Expected file paths:")
+            for match, path in MATCH_FILES.items():
+                st.text(f"- {match}: {path}")
+            return
+        
+        df = pd.concat(loaded_data, ignore_index=True)
     else:
         df = load_data(MATCH_FILES[selected_match])
     
@@ -3595,4 +3629,4 @@ Total Sessions Analyzed: {len(player_data)}
 # Run the application
 if __name__ == "__main__":
     main()
-        
+        "
