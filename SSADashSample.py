@@ -23,11 +23,11 @@ except ImportError:
 
 # Page Configuration
 st.set_page_config(
-    page_title="SSA Swarm Performance Analytics", 
+    page_title="Swarm Performance Analytics Hub", 
     layout="wide",
     initial_sidebar_state="expanded",
     menu_items={
-        'About': "SSA Swarm USL2 Performance Analytics Dashboard"
+        'About': "SSA Swarm Performance Analytics Dashboard"
     }
 )
 
@@ -142,46 +142,52 @@ st.markdown(f"""
             color: {ThemeConfig.TEXT_COLOR};
             opacity: 0.8;
         }}
+
+        /* Team card styling */
+        .team-card {{
+            background-color: {ThemeConfig.CARD_BACKGROUND};
+            border: 2px solid {ThemeConfig.PRIMARY_COLOR};
+            border-radius: 15px;
+            padding: 30px;
+            text-align: center;
+            transition: all 0.3s;
+            cursor: pointer;
+            margin: 10px;
+        }}
+        
+        .team-card:hover {{
+            transform: translateY(-10px);
+            box-shadow: 0 10px 30px rgba(215, 38, 56, 0.4);
+            border-color: {ThemeConfig.SECONDARY_COLOR};
+        }}
+        
+        .team-logo {{
+            width: 150px;
+            height: 150px;
+            margin: 0 auto 20px;
+            border-radius: 50%;
+            overflow: hidden;
+            border: 3px solid {ThemeConfig.PRIMARY_COLOR};
+        }}
+        
+        .team-name {{
+            font-size: 1.8em;
+            font-weight: bold;
+            color: {ThemeConfig.PRIMARY_COLOR};
+            margin-bottom: 10px;
+        }}
+        
+        .team-description {{
+            color: {ThemeConfig.TEXT_COLOR};
+            opacity: 0.8;
+            font-size: 1em;
+        }}
+
+        
     </style>
 """, unsafe_allow_html=True)
 
-# File Configuration
-MATCH_FILES = {
-    "5.17 vs Birmingham Legion 2": "SSA Swarm USL Mens 2 Games Statsports Reports - 5.17 SSA Swarm USL 2 vs Birmingham.csv",
-    "5.21 vs Tennessee SC": "SSA Swarm USL Mens 2 Games Statsports Reports - 5.21 Swarm USL 2 Vs TN SC.csv",
-    "5.25 vs East Atlanta FC": "SSA Swarm USL Mens 2 Games Statsports Reports - 5.25 SSA Swarm USL 2 vs East Atlanta.csv",
-    "5.31 vs Dothan United SC": "SSA Swarm USL Mens 2 Games Statsports Reports - 5.31 Swarm USL 2 vs Dothan.csv",
-    "6.4 vs Asheville City SC": "SSA Swarm USL Mens 2 Games Statsports Reports - 6.4 Swarm USL 2 vs Asheville.csv",
-    "6.7 vs Dothan United SC": "SSA Swarm USL Mens 2 Games Statsports Reports - 6.7 Swarm USL 2 vs Dothan FC .csv"
-}
 
-TRAINING_FILES = {
-    "5.12 Training": "SSA Swarm USL 2 Mens Statsports Traning Report  - 5.12 Training.csv",
-    "5.13 Training": "SSA Swarm USL 2 Mens Statsports Traning Report  - 5.13 Training .csv",
-    "5.15 Training": "SSA Swarm USL 2 Mens Statsports Traning Report  - 5.15 Training.csv",
-    "5.16 Training": "SSA Swarm USL 2 Mens Statsports Traning Report  - 5.16 Training.csv",
-    "5.19 Training": "SSA Swarm USL 2 Mens Statsports Traning Report  - 5.19 Training.csv",
-    "5.20 Training": "SSA Swarm USL 2 Mens Statsports Traning Report  - 5.20 Training.csv",
-    "6.3 Training": "SSA Swarm USL 2 Mens Statsports Traning Report  - 6.3 Training.csv",
-}
-
-EVENT_FILES = {
-    "5.17 vs Birmingham Legion 2": "SSA USL2 v BHM Legion2 05.17.25.xlsx",
-    "5.21 vs Tennessee SC": "SSA USL2 v TSC 05.21.25.xlsx",
-    "5.25 vs East Atlanta FC": "SSA USL2 v EAFC 05.25.25.xlsx",
-    "5.31 vs Dothan United SC": "SSA v Dothan USL2 05.31.25.xlsx",
-    "6.4 vs Asheville City SC": "SSA USL2 v Asheville City SC 06.04.25.xlsx",
-    "6.7 vs Dothan United SC": "SSA USL2 v Dothan2 06.07.25.xlsx",
-}
-
-EVENT_IMAGES = {
-    "5.17 vs Birmingham Legion 2": "SSAvBHM2 Event Image.png",
-    "5.21 vs Tennessee SC": "TSC New Event Image.png",
-    "5.25 vs East Atlanta FC": "East Atlanta Event Data Screenshot.png",
-    "5.31 vs Dothan United SC": "Dothan Event Image.png",
-    "6.4 vs Asheville City SC": "Asheville Event Image.png",
-    "6.7 vs Dothan United SC": "Dothan2 Event Image.png",
-}
 
 # Constants
 REQUIRED_COLUMNS = [
@@ -199,6 +205,57 @@ METRIC_DESCRIPTIONS = {
     "Accelerations": "Number of rapid speed increases",
     "Decelerations": "Number of rapid speed decreases",
     "High Speed Running": "Distance covered at high speed (meters)"
+}
+
+# Define file mappings first
+MATCH_FILES = {
+    "5.17 vs Birmingham Legion 2": "SSA Swarm USL Mens 2 Games Statsports Reports - 5.17 SSA Swarm USL 2 vs Birmingham.csv",
+    "5.21 vs Tennessee SC": "SSA Swarm USL Mens 2 Games Statsports Reports - 5.21 Swarm USL 2 Vs TN SC.csv",
+    "5.25 vs East Atlanta FC": "SSA Swarm USL Mens 2 Games Statsports Reports - 5.25 SSA Swarm USL 2 vs East Atlanta.csv",
+    "5.31 vs Dothan United SC": "SSA Swarm USL Mens 2 Games Statsports Reports - 5.31 Swarm USL 2 vs Dothan.csv",
+    "6.4 vs Asheville City SC": "SSA Swarm USL Mens 2 Games Statsports Reports - 6.4 Swarm USL 2 vs Asheville.csv",
+    "6.7 vs Dothan United SC": "SSA Swarm USL Mens 2 Games Statsports Reports - 6.7 Swarm USL 2 vs Dothan FC .csv"
+}
+
+TRAINING_FILES = {
+    "5.12 Training": "SSA Swarm USL 2 Mens Statsports Traning Report  - 5.12 Training.csv",
+    "5.13 Training": "SSA Swarm USL 2 Mens Statsports Traning Report  - 5.13 Training .csv",
+    "5.15 Training": "SSA Swarm USL 2 Mens Statsports Traning Report  - 5.15 Training.csv",
+    "5.16 Training": "SSA Swarm USL 2 Mens Statsports Traning Report  - 5.16 Training.csv",
+    "5.19 Training": "SSA Swarm USL 2 Mens Statsports Traning Report  - 5.19 Training.csv",
+    "5.20 Training": "SSA Swarm USL 2 Mens Statsports Traning Report  - 5.20 Training.csv",
+    "6.3 Training": "SSA Swarm USL 2 Mens Statsports Traning Report  - 6.3 Training.csv"
+}
+
+EVENT_FILES = {
+    "5.17 vs Birmingham Legion 2": "SSA USL2 v BHM Legion2 05.17.25.xlsx",
+    "5.21 vs Tennessee SC": "SSA USL2 v TSC 05.21.25.xlsx",
+    "5.25 vs East Atlanta FC": "SSA USL2 v EAFC 05.25.25.xlsx",
+    "5.31 vs Dothan United SC": "SSA v Dothan USL2 05.31.25.xlsx",
+    "6.4 vs Asheville City SC": "SSA USL2 v Asheville City SC 06.04.25.xlsx",
+    "6.7 vs Dothan United SC": "SSA USL2 v Dothan2 06.07.25.xlsx"
+}
+
+EVENT_IMAGES = {
+    "5.17 vs Birmingham Legion 2": "SSAvBHM2 Event Image.png",
+    "5.21 vs Tennessee SC": "TSC New Event Image.png",
+    "5.25 vs East Atlanta FC": "East Atlanta Event Data Screenshot.png",
+    "5.31 vs Dothan United SC": "Dothan Event Image.png",
+    "6.4 vs Asheville City SC": "Asheville Event Image.png",
+    "6.7 vs Dothan United SC": "Dothan2 Event Image.png"
+}
+
+# Then define TEAMS_CONFIG using the above dictionaries
+TEAMS_CONFIG = {
+    "SSA Swarm USL2": {
+        "logo": "SSALogoTransparent.jpeg",
+        "description": "USL2 Performance Center",
+        "match_files": MATCH_FILES,
+        "training_files": TRAINING_FILES,
+        "event_files": EVENT_FILES,
+        "event_images": EVENT_IMAGES
+    }
+    # Add more teams here in the same format
 }
 
 # AI Assistant Coach Function
@@ -306,17 +363,20 @@ def load_data(path):
 
 def create_circular_image(image_path):
     """Create a circular version of an image"""
-    img = Image.open(image_path).convert("RGBA")
-    size = min(img.size)
-    mask = Image.new('L', (size, size), 0)
-    draw = ImageDraw.Draw(mask)
-    draw.ellipse((0, 0, size, size), fill=255)
-    
-    left = (img.width - size) // 2
-    top = (img.height - size) // 2
-    img_cropped = img.crop((left, top, left + size, top + size))
-    img_cropped.putalpha(mask)
-    return img_cropped
+    try:
+        img = Image.open(image_path).convert("RGBA")
+        size = min(img.size)
+        mask = Image.new('L', (size, size), 0)
+        draw = ImageDraw.Draw(mask)
+        draw.ellipse((0, 0, size, size), fill=255)
+        
+        left = (img.width - size) // 2
+        top = (img.height - size) // 2
+        img_cropped = img.crop((left, top, left + size, top + size))
+        img_cropped.putalpha(mask)
+        return img_cropped
+    except:
+        return None
 
 def create_metric_card(label, value, delta=None, delta_color="normal"):
     """Create a custom metric card"""
@@ -404,73 +464,161 @@ def create_performance_summary(df, player_name=None):
     
     return summary
 
-# Sidebar Configuration
-def setup_sidebar():
+#Sidebar Configuration
+def setup_sidebar(team_config):
     """Configure the sidebar with logo and navigation"""
+    # Back to teams button
+    if st.sidebar.button("← Back to Teams", use_container_width=True):
+        st.session_state.selected_team = None
+        st.rerun()
+    
+    st.sidebar.markdown("---")
+    
+    # Team logo
     try:
-        logo = create_circular_image("SSALogoTransparent.jpeg")
-        st.sidebar.image(logo, width=200)
+        logo = create_circular_image(team_config["logo"])
+        if logo:
+            st.sidebar.image(logo, width=200)
+        else:
+            st.sidebar.markdown(f"<h1 style='color: {ThemeConfig.PRIMARY_COLOR}; text-align: center;'>{st.session_state.selected_team}</h1>", unsafe_allow_html=True)
     except:
-        st.sidebar.markdown(f"<h1 style='color: {ThemeConfig.PRIMARY_COLOR}; text-align: center;'>SSA SWARM</h1>", unsafe_allow_html=True)
+        st.sidebar.markdown(f"<h1 style='color: {ThemeConfig.PRIMARY_COLOR}; text-align: center;'>{st.session_state.selected_team}</h1>", unsafe_allow_html=True)
     
     st.sidebar.markdown("---")
     
     # API Key input
-    st.sidebar.markdown("### AI Assistant Settings")
+    st.sidebar.markdown("### 🤖 AI Assistant Settings")
     api_key = st.sidebar.text_input("Enter OpenAI API Key:", type="password", help="Your OpenAI API key for AI Coach insights")
     
     st.sidebar.markdown("---")
     
     # Report type selection
     report_type = st.sidebar.selectbox(
-        "Select Report Type",
+        "📊 Select Report Type",
         ["Match Report", "Weekly Training Report", "Daily Training Report", "Compare Players", "Player Profile"],
         help="Choose the type of analysis you want to view"
     )
     
     return report_type, api_key
 
+
+# Landing Page Functions
+def render_landing_page():
+    """Render the landing page for team selection"""
+    # Header
+    st.markdown(f"""
+    <h1 style='text-align: center; color: {ThemeConfig.PRIMARY_COLOR}; font-size: 3.5em; margin-bottom: 0;'>
+        SSA Performance Analytics Hub
+    </h1>
+    <p style='text-align: center; color: {ThemeConfig.TEXT_COLOR}; opacity: 0.8; font-size: 1.3em; margin-bottom: 50px;'>
+        Select a team to access their performance dashboard
+    </p>
+    """, unsafe_allow_html=True)
+    
+    # Team selection grid
+    cols = st.columns(3)  # 3 columns for team cards
+    
+    for idx, (team_name, team_config) in enumerate(TEAMS_CONFIG.items()):
+        with cols[idx % 3]:
+            # Create team card
+            if st.button(f"Select {team_name}", key=f"team_{team_name}", use_container_width=True):
+                st.session_state.selected_team = team_name
+                st.rerun()
+            
+            # Team logo
+            try:
+                logo = create_circular_image(team_config["logo"])
+                if logo:
+                    st.image(logo, width=150)
+                else:
+                    st.markdown(f"""
+                    <div style='width: 150px; height: 150px; background-color: {ThemeConfig.PRIMARY_COLOR}; 
+                                border-radius: 50%; margin: 0 auto 20px; display: flex; 
+                                align-items: center; justify-content: center;'>
+                        <h2 style='color: white; margin: 0;'>{team_name[:3]}</h2>
+                    </div>
+                    """, unsafe_allow_html=True)
+            except:
+                st.markdown(f"""
+                <div style='width: 150px; height: 150px; background-color: {ThemeConfig.PRIMARY_COLOR}; 
+                            border-radius: 50%; margin: 0 auto 20px; display: flex; 
+                            align-items: center; justify-content: center;'>
+                    <h2 style='color: white; margin: 0;'>{team_name[:3]}</h2>
+                </div>
+                """, unsafe_allow_html=True)
+            
+            # Team info
+            st.markdown(f"""
+            <div style='text-align: center;'>
+                <h3 style='color: {ThemeConfig.PRIMARY_COLOR};'>{team_name}</h3>
+                <p style='color: {ThemeConfig.TEXT_COLOR}; opacity: 0.8;'>{team_config['description']}</p>
+                <p style='color: {ThemeConfig.ACCENT_COLOR};'>
+                    {len(team_config['match_files'])} Matches | {len(team_config['training_files'])} Training Sessions
+                </p>
+            </div>
+            """, unsafe_allow_html=True)
+            
+            st.markdown("<br>", unsafe_allow_html=True)
+            
 # Main Application
 def main():
     """Main application logic"""
-    report_type, api_key = setup_sidebar()
+    # Initialize session state
+    if 'selected_team' not in st.session_state:
+        st.session_state.selected_team = None
     
-    # Header
-    st.markdown(f"""
-    <h1 style='text-align: center; color: {ThemeConfig.PRIMARY_COLOR}; font-size: 3em; margin-bottom: 0;'>
-        SSA Swarm Performance Analytics
-    </h1>
-    <p style='text-align: center; color: {ThemeConfig.TEXT_COLOR}; opacity: 0.8; font-size: 1.2em;'>
-        USL2 Performance Center - Advanced Analytics Dashboard with AI Insights
-    </p>
-    """, unsafe_allow_html=True)
-    
-    st.markdown("---")
-    
-    # Route to appropriate report
-    if report_type == "Match Report":
-        render_match_report(api_key)
-    elif report_type == "Weekly Training Report":
-        render_weekly_training_report(api_key)
-    elif report_type == "Daily Training Report":
-        render_daily_training_report(api_key)
-    elif report_type == "Compare Players":
-        render_player_comparison(api_key)
-    elif report_type == "Player Profile":
-        render_player_profile(api_key)
-    
-    # Footer
-    st.markdown("---")
-    st.markdown(f"""
-    <p style='text-align: center; color: {ThemeConfig.TEXT_COLOR}; opacity: 0.6;'>
-        Built for SSA Swarm | Powered by Statsports & Nacsport | Enhanced with AI Insights | © 2025
-    </p>
-    """, unsafe_allow_html=True)
+    # Show landing page or team dashboard
+    if st.session_state.selected_team is None:
+        render_landing_page()
+    else:
+        # Get team configuration
+        team_config = TEAMS_CONFIG.get(st.session_state.selected_team)
+        if not team_config:
+            st.error(f"Team configuration not found for {st.session_state.selected_team}")
+            st.session_state.selected_team = None
+            st.rerun()
+            return
+        
+        # Setup sidebar with team config
+        report_type, api_key = setup_sidebar(team_config)
+        
+        # Header
+        st.markdown(f"""
+        <h1 style='text-align: center; color: {ThemeConfig.PRIMARY_COLOR}; font-size: 3em; margin-bottom: 0;'>
+            {st.session_state.selected_team} Performance Analytics
+        </h1>
+        <p style='text-align: center; color: {ThemeConfig.TEXT_COLOR}; opacity: 0.8; font-size: 1.2em;'>
+            {team_config['description']} - Advanced Analytics Dashboard with AI Insights
+        </p>
+        """, unsafe_allow_html=True)
+        
+        st.markdown("---")
+        
+        # Route to appropriate report with team config
+        if report_type == "Match Report":
+            render_match_report(api_key, team_config)
+        elif report_type == "Weekly Training Report":
+            render_weekly_training_report(api_key, team_config)
+        elif report_type == "Daily Training Report":
+            render_daily_training_report(api_key, team_config)
+        elif report_type == "Compare Players":
+            render_player_comparison(api_key, team_config)
+        elif report_type == "Player Profile":
+            render_player_profile(api_key, team_config)
+        
+        # Footer
+        st.markdown("---")
+        st.markdown(f"""
+        <p style='text-align: center; color: {ThemeConfig.TEXT_COLOR}; opacity: 0.6;'>
+            Built for SSA | Powered by Statsports & Nacsport | Enhanced with AI Insights | © 2025
+        </p>
+         """, unsafe_allow_html=True)
 
-def render_match_report(api_key):
+def render_match_report(api_key, team_config):
     """Render the match report section"""
     # Match selection
-    match_options = ["All Matches (Average)"] + list(MATCH_FILES.keys())
+    match_files = team_config["match_files"]
+    match_options = ["All Matches (Average)"] + list(match_files.keys())
     selected_match = st.sidebar.selectbox("Select Match", match_options)
     
     # Load data
@@ -549,13 +697,13 @@ def render_match_report(api_key):
     tab1, tab2, tab3, tab4, tab5 = st.tabs(["  Event Analysis", "Performance Charts", "Trends", "Radar Analysis", "Data Table"])
     
     with tab1:
-        render_event_analysis(selected_match, api_key)
+        render_event_analysis(selected_match, api_key, EVENT_FILES, EVENT_IMAGES)
     
     with tab2:
         render_performance_charts(match_df, api_key)
     
     with tab3:
-        render_trend_analysis(selected_match, match_df, api_key)
+        render_trend_analysis(selected_match, match_df, api_key, MATCH_FILES)
     
     with tab4:
         render_radar_analysis(match_df, df, half_option, selected_player, api_key)
@@ -563,7 +711,7 @@ def render_match_report(api_key):
     with tab5:
         render_data_table(match_df)
 
-def render_event_analysis(selected_match, api_key):
+def render_event_analysis(selected_match, api_key, EVENT_FILES, EVENT_IMAGES):
     """Render event analysis section - now works for all matches including average"""
     st.markdown("### Match Event Analysis")
     
@@ -1198,7 +1346,7 @@ def render_performance_charts(match_df, api_key):
                     medal = "1" if idx == 1 else "2" if idx == 2 else "3"
                     st.markdown(f"{medal} **{row['Player Name']}**: {row[metric]:.2f}")
 
-def render_trend_analysis(selected_match, match_df, api_key):
+def render_trend_analysis(selected_match, match_df, api_key, MATCH_FILES):
     """Render trend analysis"""
     if selected_match == "All Matches (Average)":
         st.markdown("### Team Performance Trends")
@@ -1479,7 +1627,7 @@ def render_data_table(match_df):
             mime="text/csv"
         )
 
-def render_weekly_training_report(api_key):
+def render_weekly_training_report(api_key, team_config):
     """Render weekly training report"""
     st.markdown(f"<h2 style='color: {ThemeConfig.PRIMARY_COLOR};'> Weekly Training Report</h2>", unsafe_allow_html=True)
     
@@ -1968,7 +2116,7 @@ def render_load_management(weekly_df, api_key):
         
         st.plotly_chart(fig, use_container_width=True)
 
-def render_daily_training_report(api_key):
+def render_daily_training_report(api_key, team_config):
     """Render daily training report"""
     st.markdown(f"<h2 style='color: {ThemeConfig.PRIMARY_COLOR};'> Daily Training Report</h2>", unsafe_allow_html=True)
     
@@ -2309,7 +2457,7 @@ def render_comparative_analysis(df_daily, api_key):
         use_container_width=True
     )
 
-def render_player_comparison(api_key):
+def render_player_comparison(api_key, team_config):
     """Render player comparison across matches"""
     st.markdown(f"<h2 style='color: {ThemeConfig.PRIMARY_COLOR};'> Player Comparison Tool</h2>", unsafe_allow_html=True)
     
@@ -2803,7 +2951,7 @@ def render_statistical_comparison(df, players, api_key):
     
     st.plotly_chart(fig, use_container_width=True)
 
-def render_player_profile(api_key):
+def render_player_profile(api_key, team_config):
     """Render comprehensive player profile"""
     st.markdown(f"<h2 style='color: {ThemeConfig.PRIMARY_COLOR};'> Player Profile</h2>", unsafe_allow_html=True)
     
