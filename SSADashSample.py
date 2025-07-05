@@ -525,30 +525,29 @@ def render_landing_page():
                 st.session_state.selected_team = team_name
                 st.rerun()
             
-            # Team logo
-            try:
-                logo = create_circular_image(team_config["logo"])
-                if logo:
-                    # Create a centered container for the image
-                    col_logo1, col_logo2, col_logo3 = st.columns([1, 2, 1])
-                    with col_logo2:
-                        st.image(logo, width=150, use_column_width=False)
-                else:
+            # Team logo - centered using columns
+            logo_col1, logo_col2, logo_col3 = st.columns([1, 2, 1])
+            with logo_col2:
+                try:
+                    logo = create_circular_image(team_config["logo"])
+                    if logo:
+                        st.image(logo, use_container_width=True)
+                    else:
+                        st.markdown(f"""
+                        <div style='width: 150px; height: 150px; background-color: {ThemeConfig.PRIMARY_COLOR}; 
+                                    border-radius: 50%; margin: 0 auto; display: flex; 
+                                    align-items: center; justify-content: center;'>
+                            <h2 style='color: white; margin: 0;'>{team_name[:3]}</h2>
+                        </div>
+                        """, unsafe_allow_html=True)
+                except:
                     st.markdown(f"""
                     <div style='width: 150px; height: 150px; background-color: {ThemeConfig.PRIMARY_COLOR}; 
-                                border-radius: 50%; margin: 0 auto 20px; display: flex; 
+                                border-radius: 50%; margin: 0 auto; display: flex; 
                                 align-items: center; justify-content: center;'>
                         <h2 style='color: white; margin: 0;'>{team_name[:3]}</h2>
                     </div>
                     """, unsafe_allow_html=True)
-            except:
-                st.markdown(f"""
-                <div style='width: 150px; height: 150px; background-color: {ThemeConfig.PRIMARY_COLOR}; 
-                            border-radius: 50%; margin: 0 auto 20px; display: flex; 
-                            align-items: center; justify-content: center;'>
-                    <h2 style='color: white; margin: 0;'>{team_name[:3]}</h2>
-                </div>
-                """, unsafe_allow_html=True)
             
             # Team info
             st.markdown(f"""
