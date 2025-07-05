@@ -529,7 +529,10 @@ def render_landing_page():
             try:
                 logo = create_circular_image(team_config["logo"])
                 if logo:
-                    st.image(logo, width=150)
+                    # Create a centered container for the image
+                    col_logo1, col_logo2, col_logo3 = st.columns([1, 2, 1])
+                    with col_logo2:
+                        st.image(logo, width=150, use_column_width=False)
                 else:
                     st.markdown(f"""
                     <div style='width: 150px; height: 150px; background-color: {ThemeConfig.PRIMARY_COLOR}; 
