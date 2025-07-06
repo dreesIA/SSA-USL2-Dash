@@ -321,24 +321,46 @@ def load_data(path):
 def create_circular_image(image_path):
     """Create a circular version of an image"""
     try:
-        # Check if file exists first
+        # Add debugging
+        print(f"Attempting to load image from: {image_path}")
+        
+        # Check if file exists
+        import os
         if not os.path.exists(image_path):
-            print(f"Warning: Image not found at {image_path}")
+            print(f"File does not exist: {image_path}")
             return None
-            
-        img = Image.open(image_path).convert("RGBA")
+        
+        # Open and convert image
+        img = Image.open(image_path)
+        
+        # If JPEG, it might not have alpha channel
+        if img.mode != 'RGBA':
+            img = img.convert('RGBA')
+        
+        # Get the smaller dimension to make it square
         size = min(img.size)
+        
+        # Create a mask
         mask = Image.new('L', (size, size), 0)
         draw = ImageDraw.Draw(mask)
         draw.ellipse((0, 0, size, size), fill=255)
         
+        # Crop image to square
         left = (img.width - size) // 2
         top = (img.height - size) // 2
         img_cropped = img.crop((left, top, left + size, top + size))
-        img_cropped.putalpha(mask)
-        return img_cropped
+        
+        # Create output image with transparency
+        output = Image.new('RGBA', (size, size), (0, 0, 0, 0))
+        output.paste(img_cropped, (0, 0))
+        output.putalpha(mask)
+        
+        return output
+        
     except Exception as e:
-        print(f"Error loading image {image_path}: {str(e)}")
+        print(f"Error in create_circular_image: {str(e)}")
+        import traceback
+        traceback.print_exc()
         return None
 
 def create_metric_card(label, value, delta=None, delta_color="normal"):
