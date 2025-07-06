@@ -208,43 +208,6 @@ METRIC_DESCRIPTIONS = {
     "High Speed Running": "Distance covered at high speed (meters)"
 }
 
-# Define file mappings first
-MATCH_FILES = {
-    "5.17 vs Birmingham Legion 2": "SSA Swarm USL Mens 2 Games Statsports Reports - 5.17 SSA Swarm USL 2 vs Birmingham.csv",
-    "5.21 vs Tennessee SC": "SSA Swarm USL Mens 2 Games Statsports Reports - 5.21 Swarm USL 2 Vs TN SC.csv",
-    "5.25 vs East Atlanta FC": "SSA Swarm USL Mens 2 Games Statsports Reports - 5.25 SSA Swarm USL 2 vs East Atlanta.csv",
-    "5.31 vs Dothan United SC": "SSA Swarm USL Mens 2 Games Statsports Reports - 5.31 Swarm USL 2 vs Dothan.csv",
-    "6.4 vs Asheville City SC": "SSA Swarm USL Mens 2 Games Statsports Reports - 6.4 Swarm USL 2 vs Asheville.csv",
-    "6.7 vs Dothan United SC": "SSA Swarm USL Mens 2 Games Statsports Reports - 6.7 Swarm USL 2 vs Dothan FC .csv"
-}
-
-TRAINING_FILES = {
-    "5.12 Training": "SSA Swarm USL 2 Mens Statsports Traning Report  - 5.12 Training.csv",
-    "5.13 Training": "SSA Swarm USL 2 Mens Statsports Traning Report  - 5.13 Training .csv",
-    "5.15 Training": "SSA Swarm USL 2 Mens Statsports Traning Report  - 5.15 Training.csv",
-    "5.16 Training": "SSA Swarm USL 2 Mens Statsports Traning Report  - 5.16 Training.csv",
-    "5.19 Training": "SSA Swarm USL 2 Mens Statsports Traning Report  - 5.19 Training.csv",
-    "5.20 Training": "SSA Swarm USL 2 Mens Statsports Traning Report  - 5.20 Training.csv",
-    "6.3 Training": "SSA Swarm USL 2 Mens Statsports Traning Report  - 6.3 Training.csv"
-}
-
-EVENT_FILES = {
-    "5.17 vs Birmingham Legion 2": "SSA USL2 v BHM Legion2 05.17.25.xlsx",
-    "5.21 vs Tennessee SC": "SSA USL2 v TSC 05.21.25.xlsx",
-    "5.25 vs East Atlanta FC": "SSA USL2 v EAFC 05.25.25.xlsx",
-    "5.31 vs Dothan United SC": "SSA v Dothan USL2 05.31.25.xlsx",
-    "6.4 vs Asheville City SC": "SSA USL2 v Asheville City SC 06.04.25.xlsx",
-    "6.7 vs Dothan United SC": "SSA USL2 v Dothan2 06.07.25.xlsx"
-}
-
-EVENT_IMAGES = {
-    "5.17 vs Birmingham Legion 2": "SSAvBHM2 Event Image.png",
-    "5.21 vs Tennessee SC": "TSC New Event Image.png",
-    "5.25 vs East Atlanta FC": "East Atlanta Event Data Screenshot.png",
-    "5.31 vs Dothan United SC": "Dothan Event Image.png",
-    "6.4 vs Asheville City SC": "Asheville Event Image.png",
-    "6.7 vs Dothan United SC": "Dothan2 Event Image.png"
-}
 
 # Then define TEAMS_CONFIG using the above dictionaries
 TEAMS_CONFIG = {
@@ -347,6 +310,11 @@ def display_ai_assistant(context, data_summary, api_key):
 def load_data(path):
     """Load and preprocess CSV data with caching"""
     try:
+        # Check if file exists
+        if not os.path.exists(path):
+            st.error(f"File not found: {path}")
+            return pd.DataFrame()
+            
         df = pd.read_csv(path)
         df.columns = df.columns.str.strip()
         df.dropna(subset=["Player Name"], inplace=True)
@@ -365,6 +333,11 @@ def load_data(path):
 def create_circular_image(image_path):
     """Create a circular version of an image"""
     try:
+        # Check if file exists first
+        if not os.path.exists(image_path):
+            print(f"Warning: Image not found at {image_path}")
+            return None
+            
         img = Image.open(image_path).convert("RGBA")
         size = min(img.size)
         mask = Image.new('L', (size, size), 0)
@@ -376,7 +349,8 @@ def create_circular_image(image_path):
         img_cropped = img.crop((left, top, left + size, top + size))
         img_cropped.putalpha(mask)
         return img_cropped
-    except:
+    except Exception as e:
+        print(f"Error loading image {image_path}: {str(e)}")
         return None
 
 def create_metric_card(label, value, delta=None, delta_color="normal"):
@@ -516,11 +490,20 @@ def render_landing_page():
     </p>
     """, unsafe_allow_html=True)
     
-    # Team selection grid
-    cols = st.columns(3)  # 3 columns for team cards
+    # Calculate number of rows needed
+    teams_list = list(TEAMS_CONFIG.items())
+    num_teams = len(teams_list)
+    teams_per_row = 3
     
-    for idx, (team_name, team_config) in enumerate(TEAMS_CONFIG.items()):
-        with cols[idx % 3]:
+    # Create rows of teams
+    for row_idx in range(0, num_teams, teams_per_row):
+        cols = st.columns(teams_per_row)
+        
+        # Get teams for this row
+        row_teams = teams_list[row_idx:row_idx + teams_per_row]
+        
+        for col_idx, (team_name, team_config) in enumerate(row_teams):
+            with cols[col_idx]:
             # Create team card button first (full width)
             if st.button(f"Select {team_name}", key=f"team_{team_name}", use_container_width=True):
                 st.session_state.selected_team = team_name
