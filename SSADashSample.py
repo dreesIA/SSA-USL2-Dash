@@ -526,7 +526,7 @@ def render_landing_page():
                     logo_col1, logo_col2, logo_col3 = st.columns([1, 2, 1])
                     with logo_col2:
                         try:
-                            logo = create_circular_image(teams_config["logo"])
+                            logo = create_circular_image(team_config["logo"])
                             if logo:
                                 st.image(logo, use_container_width=True)
                             else:
@@ -1639,16 +1639,19 @@ def render_weekly_training_report(api_key, team_config):
     """Render weekly training report"""
     st.markdown(f"<h2 style='color: {ThemeConfig.PRIMARY_COLOR};'> Weekly Training Report</h2>", unsafe_allow_html=True)
     
+    # Get training files from team_config
+    TRAINING_FILES = team_config.get("training_files", {})
+    
+    if not TRAINING_FILES:
+        st.warning("No training files configured for this team.")
+        return
+    
     # Session selection
     selected_sessions = st.sidebar.multiselect(
         "Select Training Sessions",
         list(TRAINING_FILES.keys()),
         default=list(TRAINING_FILES.keys())
     )
-    
-    if not selected_sessions:
-        st.info("Please select at least one training session.")
-        return
     
     # Load data
     training_data = []
@@ -2128,6 +2131,13 @@ def render_daily_training_report(api_key, team_config):
     """Render daily training report"""
     st.markdown(f"<h2 style='color: {ThemeConfig.PRIMARY_COLOR};'> Daily Training Report</h2>", unsafe_allow_html=True)
     
+    # Get training files from team_config
+    TRAINING_FILES = team_config.get("training_files", {})
+    
+    if not TRAINING_FILES:
+        st.warning("No training files configured for this team.")
+        return
+    
     # Session selection
     selected_session = st.sidebar.selectbox(
         "Select Training Session",
@@ -2468,6 +2478,10 @@ def render_comparative_analysis(df_daily, api_key):
 def render_player_comparison(api_key, team_config):
     """Render player comparison across matches"""
     st.markdown(f"<h2 style='color: {ThemeConfig.PRIMARY_COLOR};'> Player Comparison Tool</h2>", unsafe_allow_html=True)
+    
+    # Get files from team_config
+    MATCH_FILES = team_config.get("match_files", {})
+    TRAINING_FILES = team_config.get("training_files", {})
     
     # Data source selection
     data_source = st.sidebar.radio(
