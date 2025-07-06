@@ -44,21 +44,15 @@ SSA_ACADEMY_U19 = {
     "logo": "SSALogoTransparent.jpeg",
     "description": "U19 MLS Next Performance Center",
     "match_files": {
-        "6.10 vs Atlanta United Academy": "Academy/U19_vs_Atlanta_United.csv",
-        "6.15 vs Charlotte FC Academy": "Academy/U19_vs_Charlotte.csv",
         # Add more matches...
     },
     "training_files": {
-        "6.8 Training": "Academy/U19_Training_6.8.csv",
-        "6.9 Training": "Academy/U19_Training_6.9.csv",
         # Add more training sessions...
     },
     "event_files": {
-        "6.10 vs Atlanta United Academy": "Academy/U19_vs_Atlanta_United_Events.xlsx",
         # Add more event files...
     },
     "event_images": {
-        "6.10 vs Atlanta United Academy": "Academy/U19_vs_Atlanta_Event.png",
         # Add more event images...
     }
 }
