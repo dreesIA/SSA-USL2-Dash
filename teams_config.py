@@ -41,7 +41,7 @@ SSA_SWARM_USL2 = {
 
 # Team 2: SSA Academy U19
 SSA_ACADEMY_U19 = {
-    "logo": "SSA_Academy_Logo.png",
+    "logo": "SSALogoTransparent.jpeg",
     "description": "U19 MLS Next Performance Center",
     "match_files": {
         "6.10 vs Atlanta United Academy": "Academy/U19_vs_Atlanta_United.csv",
@@ -65,7 +65,7 @@ SSA_ACADEMY_U19 = {
 
 # Team 3: SSA Women's First Team
 SSA_WOMENS_FIRST = {
-    "logo": "SSA_Womens_Logo.png",
+    "logo": "SSALogoTransparent.jpeg",
     "description": "USLW Performance Center",
     "match_files": {
         # Add match files...
