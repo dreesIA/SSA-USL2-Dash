@@ -504,10 +504,10 @@ def render_landing_page():
         
         for col_idx, (team_name, team_config) in enumerate(row_teams):
             with cols[col_idx]:
-            # Create team card button first (full width)
-            if st.button(f"Select {team_name}", key=f"team_{team_name}", use_container_width=True):
-                st.session_state.selected_team = team_name
-                st.rerun()
+                # Create team card button first (full width)
+                if st.button(f"Select {team_name}", key=f"team_{team_name}", use_container_width=True):
+                    st.session_state.selected_team = team_name
+                    st.rerun()
             
             # Team logo - centered using columns
             logo_col1, logo_col2, logo_col3 = st.columns([1, 2, 1])
