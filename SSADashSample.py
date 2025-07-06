@@ -2948,6 +2948,9 @@ def render_statistical_comparison(df, players, api_key):
 
 def render_player_profile(api_key, team_config):
     """Render comprehensive player profile"""
+    MATCH_FILES = team_config["match_files"]
+    TRAINING_FILES = team_config["training_files"]
+    
     st.markdown(f"<h2 style='color: {ThemeConfig.PRIMARY_COLOR};'> Player Profile</h2>", unsafe_allow_html=True)
     
     # Load all available data
