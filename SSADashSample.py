@@ -503,7 +503,7 @@ def render_landing_page():
                     logo_col1, logo_col2, logo_col3 = st.columns([1, 2, 1])
                     with logo_col2:
                         try:
-                            logo = create_circular_image(team_config["logo"])
+                            logo = create_circular_image(teams_config["logo"])
                             if logo:
                                 st.image(logo, use_container_width=True)
                             else:
