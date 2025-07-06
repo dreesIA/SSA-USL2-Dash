@@ -209,18 +209,6 @@ METRIC_DESCRIPTIONS = {
 }
 
 
-# Then define TEAMS_CONFIG using the above dictionaries
-TEAMS_CONFIG = {
-    "SSA Swarm USL2": {
-        "logo": "SSALogoTransparent.jpeg",
-        "description": "USL2 Performance Center",
-        "match_files": MATCH_FILES,
-        "training_files": TRAINING_FILES,
-        "event_files": EVENT_FILES,
-        "event_images": EVENT_IMAGES
-    }
-    # Add more teams here in the same format
-}
 
 # AI Assistant Coach Function
 def get_ai_coach_insights(context, data_summary, api_key):
