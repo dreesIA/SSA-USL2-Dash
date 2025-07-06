@@ -84,7 +84,7 @@ SSA_WOMENS_FIRST = {
 # Master configuration
 TEAMS_CONFIG = {
     "SSA Swarm USL2": SSA_SWARM_USL2,
-    "SSA Academy U19": SSA_ACADEMY_U19,
-    "SSA Women's First": SSA_WOMENS_FIRST,
+    "SSA Swarm MLS Next U19": SSA_ACADEMY_U19,
+    "SSA Swarm USLW": SSA_WOMENS_FIRST,
     # Add more teams here...
 }
