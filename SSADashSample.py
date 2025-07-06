@@ -602,6 +602,15 @@ def main():
 
 def render_match_report(api_key, team_config):
     """Render the match report section"""
+    # Get team-specific files
+    MATCH_FILES = team_config.get("match_files", {})
+    EVENT_FILES = team_config.get("event_files", {})
+    EVENT_IMAGES = team_config.get("event_images", {})
+    
+    if not MATCH_FILES:
+        st.warning("No match files configured for this team.")
+        return
+        
     # Match selection
     match_files = team_config["match_files"]
     match_options = ["All Matches (Average)"] + list(match_files.keys())
