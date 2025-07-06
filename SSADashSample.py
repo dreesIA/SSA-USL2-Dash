@@ -36,7 +36,7 @@ st.set_page_config(
 # Theme Configuration
 class ThemeConfig:
     PRIMARY_COLOR = "#D72638"
-    SECONDARY_COLOR = "#3CB371"
+    SECONDARY_COLOR = "#ffffff"
     BACKGROUND_COLOR = "#1A1A1D"
     CARD_BACKGROUND = "#2D2D30"
     TEXT_COLOR = "#FFFFFF"
