@@ -2,6 +2,7 @@
 # source .venv/bin/activate
 # TYPE THAT INTO TERMINAL
 
+from teams_config import TEAMS_CONFIG
 import streamlit as st
 import pandas as pd
 import altair as alt
