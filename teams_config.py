@@ -39,7 +39,7 @@ SSA_SWARM_USL2 = {
     }
 }
 
-# Team 2: SSA Academy U19
+# Team 2: SSA Boys MLS Next U19
 SSA_ACADEMY_U19 = {
     "logo": "SSALogoTransparent.jpeg",
     "description": "U19 MLS Next Performance Center",
@@ -75,10 +75,27 @@ SSA_WOMENS_FIRST = {
     }
 }
 
+#Team 4: SSA Girls U19
+SSA_Girls_Academy = {
+    "logo":"SSALogoTransparent.jpeg",
+    "description": "U19 GA Performance Center",
+    "match_files": {
+
+    },
+    "training_files": {
+
+    },
+    "event_files": {
+    },
+    "event_images": {
+    }
+}
+
 # Master configuration
 TEAMS_CONFIG = {
     "SSA Swarm USL2": SSA_SWARM_USL2,
     "SSA Swarm MLS Next U19": SSA_ACADEMY_U19,
     "SSA Swarm USLW": SSA_WOMENS_FIRST,
+    "SSA Swarm GA U19": SSA_Girls_Academy,
     # Add more teams here...
 }
