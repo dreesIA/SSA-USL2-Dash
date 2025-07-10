@@ -494,7 +494,7 @@ def render_landing_page():
     # Header
     st.markdown(f"""
     <h1 style='text-align: center; color: {ThemeConfig.PRIMARY_COLOR}; font-size: 3.5em; margin-bottom: 0;'>
-        SSA Performance Analytics Hub
+        Swarm Performance Analytics Hub
     </h1>
     <p style='text-align: center; color: {ThemeConfig.TEXT_COLOR}; opacity: 0.8; font-size: 1.3em; margin-bottom: 50px;'>
         Select a team to access their performance dashboard
