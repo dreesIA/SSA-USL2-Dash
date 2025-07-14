@@ -215,7 +215,7 @@ METRIC_DESCRIPTIONS = {
 def get_ai_coach_insights(context, data_summary, api_key):
     """Get AI coach insights based on current context and data"""
     if not api_key:
-        return "Please enter your OpenAI API key in the sidebar to enable AI Coach insights."
+        return "Please enter your OpenAI key"
     
     if openai is None:
         return "OpenAI library not installed. Please run: pip install openai"
